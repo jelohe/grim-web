@@ -6,6 +6,7 @@ defmodule Grim.Scroll do
     field :name, :string
     field :content, :string
     belongs_to :user, Grim.Accounts.User
+    many_to_many :words, Grim.Word, join_through: "scrolls_tags"
 
     timestamps(type: :utc_datetime)
   end

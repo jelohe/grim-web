@@ -5,6 +5,7 @@ defmodule Grim.Word do
   schema "words" do
     field :name, :string
     belongs_to :user, Grim.Accounts.User
+    many_to_many :scrolls, Grim.Scroll, join_through: "scrolls_tags"
 
     timestamps(type: :utc_datetime)
   end
