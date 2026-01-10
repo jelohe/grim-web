@@ -8,7 +8,9 @@ defmodule GrimWeb.UserLive.Scrolls do
       <h1 class="text-4xl font-bold">lipu ale</h1>
       <ul class="border-solid border-1 grid divide-y-1 divide-white">
         <%= for scroll <- @scrolls do %>
-          <li class=""><%= scroll.name %></li>
+          <li phx-click="open_scroll" phx-value-id={scroll.id} class="">
+            <%= scroll.name %>
+          </li>
         <% end %>
       </ul>
 
@@ -24,6 +26,11 @@ defmodule GrimWeb.UserLive.Scrolls do
         />
         <button class="btn">o awen</button>
       </.form>
+      <%= if @selected do %>
+        <div class="border">
+          <%= @selected %>
+        </div>
+      <% end %>
     </Layouts.app>
     """
   end
@@ -39,8 +46,21 @@ defmodule GrimWeb.UserLive.Scrolls do
     {:ok, assign(
       socket,
       scrolls: scrolls,
+      selected: nil,
       form: form,
       trigger_submit: false
+    )}
+  end
+
+  @impl true
+  def handle_event("open_scroll", %{"id" => selected_id}, socket) do
+    {id, _} = Integer.parse(selected_id)
+    selected = socket.assigns.scrolls
+               |> Enum.find_value(fn v -> if v.id == id, do: v end)
+
+    {:noreply, assign(
+      socket,
+      selected: selected.content
     )}
   end
 
