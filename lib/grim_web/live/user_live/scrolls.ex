@@ -14,21 +14,33 @@ defmodule GrimWeb.UserLive.Scrolls do
         <% end %>
       </ul>
 
-      <h1 class="mt-16 text-4xl font-bold">pali e lipu sin</h1>
-      <.form as={:scroll} for={@form} id="new-scroll" phx-submit="save">
-        <.input
-          field={@form[:name]}
-        />
-        <.input
-          field={@form[:content]}
-          type="textarea"
-          class="w-full h-100 resize-none"
-        />
-        <button class="btn">o awen</button>
-      </.form>
+      <div class="hidden">
+        <h1 class="mt-16 text-4xl font-bold">lipu sin</h1>
+        <.form as={:scroll} for={@create_form} id="new-scroll" phx-submit="create-scroll">
+          <.input
+            field={@create_form[:name]}
+          />
+          <.input
+            field={@create_form[:content]}
+            type="textarea"
+            class="w-full h-100 resize-none border-1"
+          />
+          <button class="btn">o pali</button>
+        </.form>
+      </div>
       <%= if @selected do %>
-        <div class="border">
-          <%= @selected %>
+        <div class="mt-16 mb-8">
+          <.form as={:scroll} for={@create_form} id="update_scroll" phx-submit="update_scroll">
+            <.input field={@create_form[:name]} value={@selected.name} />
+            <.input type="hidden" field={@create_form[:id]} value={@selected.id} />
+            <.input
+              field={@create_form[:content]}
+              type="textarea"
+              class="w-full h-100 resize-none border-1"
+              value={@selected.content}
+            />
+            <button class="btn">o ante</button>
+          </.form>
         </div>
       <% end %>
     </Layouts.app>
@@ -39,15 +51,16 @@ defmodule GrimWeb.UserLive.Scrolls do
   def mount(_params, _session, socket) do
     user = socket.assigns.current_scope.user
     scrolls = Grim.Repo.preload(user, :scrolls).scrolls
-    form = %Grim.Scroll{}
+    create_form = %Grim.Scroll{}
            |> Ecto.Changeset.change()
            |> to_form()
 
     {:ok, assign(
       socket,
       scrolls: scrolls,
-      selected: nil,
-      form: form,
+      selected: Enum.at(scrolls, 0),
+      # selected: nil,
+      create_form: create_form,
       trigger_submit: false
     )}
   end
@@ -60,12 +73,36 @@ defmodule GrimWeb.UserLive.Scrolls do
 
     {:noreply, assign(
       socket,
-      selected: selected.content
+      selected: selected
     )}
   end
 
+  def handle_event("update_scroll", %{"scroll" => scroll_params}, socket) do
+    %{"id" => id_param} = scroll_params
+    {id, _} = Integer.parse(id_param)
+    user = socket.assigns.current_scope.user
+    scrolls = Grim.Repo.preload(user, :scrolls).scrolls
+    index = scrolls |> Enum.find_index(&(&1.id == id))
+    scroll = Enum.at(scrolls, index)
+
+    changeset = Ecto.Changeset.cast(scroll, scroll_params, [:content, :name])
+
+    case Grim.Repo.update(changeset) do
+      {:ok, scroll} ->
+        {:noreply,
+          socket
+          |> put_flash(:info, "scroll updated")
+          |> assign(:scrolls, List.replace_at(scrolls, index, scroll))
+          |> assign(:create_form, to_form(Ecto.Changeset.change(%Grim.Scroll{})))
+        }
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, create_form: to_form(changeset))}
+    end
+  end
+
   @impl true
-  def handle_event("save", %{"scroll" => scroll_params}, socket) do
+  def handle_event("create-scroll", %{"scroll" => scroll_params}, socket) do
     scope = socket.assigns.current_scope
     user = scope.user
 
@@ -78,11 +115,11 @@ defmodule GrimWeb.UserLive.Scrolls do
           socket
           |> put_flash(:info, "scroll created")
           |> assign(:scrolls, [scroll | socket.assigns.scrolls])
-          |> assign(:form, to_form(Ecto.Changeset.change(%Grim.Scroll{})))
+          |> assign(:create_form, to_form(Ecto.Changeset.change(%Grim.Scroll{})))
         }
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, form: to_form(changeset))}
+        {:noreply, assign(socket, create_form: to_form(changeset))}
     end
   end
 end
