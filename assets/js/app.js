@@ -25,11 +25,23 @@ import {LiveSocket} from "phoenix_live_view"
 import {hooks as colocatedHooks} from "phoenix-colocated/grim"
 import topbar from "../vendor/topbar"
 
+let Hooks = {}
+Hooks.NewScroll = {
+  mounted() {
+    this.el.addEventListener("click", () => {
+      const createForm = document.getElementById("create-form");
+      const updateForm = document.getElementById("update-form");
+      createForm.classList.remove("hidden");
+      updateForm.classList.add("hidden");
+    });
+  }
+}
+
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 const liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
   params: {_csrf_token: csrfToken},
-  hooks: {...colocatedHooks},
+  hooks: {...colocatedHooks, ...Hooks},
 })
 
 // Show progress bar on live navigation and form submits

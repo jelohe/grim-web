@@ -6,15 +6,12 @@ defmodule GrimWeb.UserLive.Scrolls do
     ~H"""
     <Layouts.app flash={@flash} current_scope={@current_scope}>
       <h1 class="text-4xl font-bold">lipu ale</h1>
-      <ul class="border-solid border-1 grid divide-y-1 divide-white">
-        <%= for scroll <- @scrolls do %>
-          <li phx-click="open_scroll" phx-value-id={scroll.id} class="">
-            <%= scroll.name %>
-          </li>
-        <% end %>
-      </ul>
+      <.scroll_list scrolls={@scrolls} />
+      <button class="btn" id="create-button" phx-hook="NewScroll">
+        o open e lipu sin
+      </button>
 
-      <div class="hidden">
+      <div id="create-form" class="hidden">
         <h1 class="mt-16 text-4xl font-bold">lipu sin</h1>
         <.form as={:scroll} for={@create_form} id="new-scroll" phx-submit="create-scroll">
           <.input
@@ -29,7 +26,7 @@ defmodule GrimWeb.UserLive.Scrolls do
         </.form>
       </div>
       <%= if @selected do %>
-        <div class="mt-16 mb-8">
+        <div id="update-form" class="mt-16 mb-8">
           <.form as={:scroll} for={@create_form} id="update_scroll" phx-submit="update_scroll">
             <.input field={@create_form[:name]} value={@selected.name} />
             <.input type="hidden" field={@create_form[:id]} value={@selected.id} />
@@ -44,6 +41,18 @@ defmodule GrimWeb.UserLive.Scrolls do
         </div>
       <% end %>
     </Layouts.app>
+    """
+  end
+
+  def scroll_list(assigns) do
+    ~H"""
+      <ul class="border-solid border-1 grid divide-y-1 divide-white">
+        <%= for scroll <- @scrolls do %>
+          <li phx-click="open_scroll" phx-value-id={scroll.id} class="">
+            <%= scroll.name %>
+          </li>
+        <% end %>
+      </ul>
     """
   end
 
