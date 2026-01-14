@@ -5,54 +5,59 @@ defmodule GrimWeb.UserLive.Scrolls do
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash} current_scope={@current_scope}>
-      <h1 class="text-4xl font-bold">lipu ale</h1>
-      <.scroll_list scrolls={@scrolls} />
-      <button class="btn" id="create-button" phx-hook="NewScroll">
-        o open e lipu sin
-      </button>
+      <div class="flex">
+        <div class="w-1/4">
+          <h1 class="text-4xl font-bold">lipu ale</h1>
+          <.scroll_list scrolls={@scrolls} />
+          <button class="btn" id="create-button" phx-hook="NewScroll">
+            o open e lipu sin
+          </button>
+        </div>
 
-      <div id="create-form" class="hidden">
-        <h1 class="mt-16 text-4xl font-bold">lipu sin</h1>
-        <.form as={:scroll} for={@create_form} id="new-scroll" phx-submit="create-scroll">
-          <.input
-            field={@create_form[:name]}
-          />
-          <.input
-            field={@create_form[:content]}
-            type="textarea"
-            class="w-full h-100 resize-none border-1"
-          />
-          <button class="btn">o pali</button>
-        </.form>
-      </div>
-      <%= if @selected do %>
-        <div id="update-form" class="mt-16 mb-8">
-          <.form as={:scroll} for={@create_form} id="update_scroll" phx-submit="update_scroll">
-            <.input field={@create_form[:name]} value={@selected.name} />
-            <.input type="hidden" field={@create_form[:id]} value={@selected.id} />
+        <div id="create-form" class="hidden w-1/4">
+          <h1 class="text-4xl font-bold">lipu sin</h1>
+          <.form as={:scroll} for={@create_form} id="new-scroll" phx-submit="create-scroll">
+            <.input
+              field={@create_form[:name]}
+            />
             <.input
               field={@create_form[:content]}
               type="textarea"
               class="w-full h-100 resize-none border-1"
-              value={@selected.content}
             />
-            <button class="btn">o ante</button>
+            <button class="btn">o pali</button>
           </.form>
         </div>
-      <% end %>
+
+        <%= if @selected do %>
+          <div id="update-form" class="mb-8 w-3/4">
+            <.form as={:scroll} for={@create_form} id="update_scroll" phx-submit="update_scroll">
+              <.input field={@create_form[:name]} value={@selected.name} />
+              <.input type="hidden" field={@create_form[:id]} value={@selected.id} />
+              <.input
+                field={@create_form[:content]}
+                type="textarea"
+                class="w-full h-100 resize-none border-1"
+                value={@selected.content}
+              />
+              <button class="btn">o ante</button>
+            </.form>
+          </div>
+        <% end %>
+      </div>
     </Layouts.app>
     """
   end
 
   def scroll_list(assigns) do
     ~H"""
-      <ul class="border-solid border-1 grid divide-y-1 divide-white">
-        <%= for scroll <- @scrolls do %>
-          <li phx-click="open_scroll" phx-value-id={scroll.id} class="">
-            <%= scroll.name %>
-          </li>
-        <% end %>
-      </ul>
+    <ul class="border-base-200 border-r-1 divide-base-200 grid divide-y-1 overflow-hidden">
+      <%= for scroll <- @scrolls do %>
+        <li phx-click="open_scroll" phx-value-id={scroll.id} class="">
+          <%= scroll.name %>
+        </li>
+      <% end %>
+    </ul>
     """
   end
 
@@ -61,14 +66,13 @@ defmodule GrimWeb.UserLive.Scrolls do
     user = socket.assigns.current_scope.user
     scrolls = Grim.Repo.preload(user, :scrolls).scrolls
     create_form = %Grim.Scroll{}
-           |> Ecto.Changeset.change()
-           |> to_form()
+                  |> Ecto.Changeset.change()
+                  |> to_form()
 
     {:ok, assign(
       socket,
       scrolls: scrolls,
-      selected: Enum.at(scrolls, 0),
-      # selected: nil,
+      selected: nil,
       create_form: create_form,
       trigger_submit: false
     )}
