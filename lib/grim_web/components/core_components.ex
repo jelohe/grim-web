@@ -275,7 +275,7 @@ defmodule GrimWeb.CoreComponents do
   # All other inputs text, datetime-local, url, password, etc. are handled here...
   def input(assigns) do
     ~H"""
-    <div class="fieldset mb-2">
+    <div class="fieldset m-0 p-0">
       <label>
         <span :if={@label} class="label mb-1">{@label}</span>
         <input

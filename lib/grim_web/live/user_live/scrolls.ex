@@ -7,13 +7,13 @@ defmodule GrimWeb.UserLive.Scrolls do
     <Layouts.app flash={@flash} current_scope={@current_scope}>
       <div class="flex">
         <div class="w-1/4">
-          <.scroll_list scrolls={@scrolls} />
-          <button class="btn" id="create-button" phx-click="new_scroll">
-            o open e lipu sin
+          <button class="btn w-full" id="create-button" phx-click="new_scroll">
+            Create a note
           </button>
+          <.scroll_list scrolls={@scrolls} />
         </div>
 
-        <div id="create-form" class="w-3/4">
+        <div id="create-form" class="w-3/4 border-l-1 border-base-200">
           <.form
             as={:scroll}
             for={@form}
@@ -21,15 +21,15 @@ defmodule GrimWeb.UserLive.Scrolls do
             phx-submit="save_scroll"
           >
             <.input
-              class="h-9 focus:outline-none text-4xl font-bold"
+              class="h-9 border-y-1 border-base-200 focus:outline-none text-4xl font-bold box-border p-8 min-w-0 w-full"
               field={@form[:name]}
             />
             <.input
               field={@form[:content]}
               type="textarea"
-              class="w-full h-100 resize-none border-0 focus:outline-none text-xl"
+              class="h-100 resize-none border-0 focus:outline-none text-base box-border px-8 min-w-0 w-full"
             />
-            <button class="btn">o pali</button>
+            <button class="btn w-full">Save</button>
           </.form>
         </div>
       </div>
@@ -39,9 +39,13 @@ defmodule GrimWeb.UserLive.Scrolls do
 
   def scroll_list(assigns) do
     ~H"""
-    <ul class="border-base-200 border-r-1 divide-base-200 grid divide-y-1 overflow-hidden">
+    <ul class="border-base-200 border-b-1 border-t-1 divide-base-200 grid divide-y-1">
       <%= for scroll <- @scrolls do %>
-        <li phx-click="open_scroll" phx-value-id={scroll.id} class="">
+        <li
+          phx-click="open_scroll"
+          phx-value-id={scroll.id}
+          class="px-2 py-2 text-ellipsis text-nowrap w-full min-w-0 truncate cursor-pointer"
+        >
           <%= scroll.name %>
         </li>
       <% end %>
@@ -54,7 +58,7 @@ defmodule GrimWeb.UserLive.Scrolls do
     user = socket.assigns.current_scope.user
     scrolls = Grim.Repo.preload(user, :scrolls).scrolls
 
-    scroll = %Grim.Scroll{name: "lipu sin"}
+    scroll = Enum.at(scrolls, 0)
     form = scroll
       |> Ecto.Changeset.change()
       |> to_form()
@@ -68,7 +72,7 @@ defmodule GrimWeb.UserLive.Scrolls do
 
   @impl true
   def handle_event("new_scroll", _params, socket) do
-    scroll = %Grim.Scroll{name: "lipu sin"}
+    scroll = %Grim.Scroll{name: "New note ..."}
     form = scroll
            |> Ecto.Changeset.change()
            |> to_form()
