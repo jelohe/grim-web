@@ -8,42 +8,30 @@ defmodule GrimWeb.UserLive.Scrolls do
       <div class="flex">
         <div class="w-1/4">
           <.scroll_list scrolls={@scrolls} />
-          <button class="btn" id="create-button" phx-hook="NewScroll">
+          <button class="btn" id="create-button" phx-click="new_scroll">
             o open e lipu sin
           </button>
         </div>
 
-        <div id="create-form" class="hidden mb-8 w-3/4">
-          <.form as={:scroll} for={@create_form} id="new-scroll" phx-submit="create-scroll">
+        <div id="create-form" class="w-3/4">
+          <.form
+            as={:scroll}
+            for={@form}
+            id="scroll-editor"
+            phx-submit="save_scroll"
+          >
             <.input
-              class="h-9 border-color-red-400 focus:outline-none text-4xl font-bold"
-              field={@create_form[:name]}
-              value="lipu sin"
+              class="h-9 focus:outline-none text-4xl font-bold"
+              field={@form[:name]}
             />
             <.input
-              field={@create_form[:content]}
+              field={@form[:content]}
               type="textarea"
               class="w-full h-100 resize-none border-0 focus:outline-none text-xl"
             />
             <button class="btn">o pali</button>
           </.form>
         </div>
-
-        <%= if @selected do %>
-          <div id="update-form" class="mb-8 w-3/4">
-            <.form as={:scroll} for={@create_form} id="update_scroll" phx-submit="update_scroll">
-              <.input field={@create_form[:name]} value={@selected.name} />
-              <.input type="hidden" field={@create_form[:id]} value={@selected.id} />
-              <.input
-                field={@create_form[:content]}
-                type="textarea"
-                class="w-full h-100 resize-none border-1"
-                value={@selected.content}
-              />
-              <button class="btn">o ante</button>
-            </.form>
-          </div>
-        <% end %>
       </div>
     </Layouts.app>
     """
@@ -65,74 +53,104 @@ defmodule GrimWeb.UserLive.Scrolls do
   def mount(_params, _session, socket) do
     user = socket.assigns.current_scope.user
     scrolls = Grim.Repo.preload(user, :scrolls).scrolls
-    create_form = %Grim.Scroll{}
-                  |> Ecto.Changeset.change()
-                  |> to_form()
 
-    {:ok, assign(
-      socket,
+    scroll = %Grim.Scroll{name: "lipu sin"}
+    form = scroll
+      |> Ecto.Changeset.change()
+      |> to_form()
+
+    {:ok, assign(socket,
       scrolls: scrolls,
-      selected: nil,
-      create_form: create_form,
-      trigger_submit: false
+      scroll: scroll,
+      form: form
+    )}
+  end
+
+  @impl true
+  def handle_event("new_scroll", _params, socket) do
+    scroll = %Grim.Scroll{name: "lipu sin"}
+    form = scroll
+           |> Ecto.Changeset.change()
+           |> to_form()
+
+    {:noreply, assign(
+      socket,
+      scroll: scroll,
+      form: form
     )}
   end
 
   @impl true
   def handle_event("open_scroll", %{"id" => selected_id}, socket) do
     {id, _} = Integer.parse(selected_id)
-    selected = socket.assigns.scrolls
+    scroll = socket.assigns.scrolls
                |> Enum.find_value(fn v -> if v.id == id, do: v end)
+
+    form = scroll
+           |> Ecto.Changeset.change()
+           |> to_form()
 
     {:noreply, assign(
       socket,
-      selected: selected
+      scroll: scroll,
+      form: form
     )}
   end
 
-  def handle_event("update_scroll", %{"scroll" => scroll_params}, socket) do
-    %{"id" => id_param} = scroll_params
-    {id, _} = Integer.parse(id_param)
-    user = socket.assigns.current_scope.user
-    scrolls = Grim.Repo.preload(user, :scrolls).scrolls
-    index = scrolls |> Enum.find_index(&(&1.id == id))
-    scroll = Enum.at(scrolls, index)
+  @impl true
+  def handle_event("save_scroll", %{"scroll" => scroll_params}, socket) do
+    scope = socket.assigns.current_scope
+    user = scope.user
+    scroll = socket.assigns.scroll
 
-    changeset = Ecto.Changeset.cast(scroll, scroll_params, [:content, :name])
+    case scroll.id do
+      nil ->
+        create_scroll(scroll_params, user, scope, socket)
 
-    case Grim.Repo.update(changeset) do
-      {:ok, scroll} ->
-        {:noreply,
-          socket
-          |> put_flash(:info, "scroll updated")
-          |> assign(:scrolls, List.replace_at(scrolls, index, scroll))
-          |> assign(:create_form, to_form(Ecto.Changeset.change(%Grim.Scroll{})))
-        }
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, create_form: to_form(changeset))}
+      _id ->
+        update_scroll(scroll, scroll_params, socket)
     end
   end
 
-  @impl true
-  def handle_event("create-scroll", %{"scroll" => scroll_params}, socket) do
-    scope = socket.assigns.current_scope
-    user = scope.user
-
+  defp create_scroll(params, user, scope, socket) do
     changeset = %Grim.Scroll{user_id: user.id}
-                |> Grim.Scroll.changeset(scroll_params, scope)
+                |> Grim.Scroll.changeset(params, scope)
 
     case Grim.Repo.insert(changeset) do
       {:ok, scroll} ->
         {:noreply,
           socket
           |> put_flash(:info, "scroll created")
+          |> assign(:scroll, scroll)
           |> assign(:scrolls, [scroll | socket.assigns.scrolls])
-          |> assign(:create_form, to_form(Ecto.Changeset.change(%Grim.Scroll{})))
+          |> assign(:form, to_form(Ecto.Changeset.change(scroll)))
         }
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, create_form: to_form(changeset))}
+        {:noreply, assign(socket, form: to_form(changeset))}
+    end
+  end
+
+  defp update_scroll(scroll, params, socket) do
+    changeset = scroll
+                |> Ecto.Changeset.cast(params, [:name, :content])
+
+    case Grim.Repo.update(changeset) do
+      {:ok, updated_scroll} ->
+      scrolls = socket.assigns.scrolls
+                |> Enum.map(fn s ->
+                  if s.id == updated_scroll.id, do: updated_scroll, else: s
+                end)
+      {:noreply,
+        socket
+        |> put_flash(:info, "scroll created")
+        |> assign(:scroll, scroll)
+        |> assign(:scrolls, scrolls)
+        |> assign(:form, to_form(Ecto.Changeset.change(scroll)))
+      }
+
+      {:error, changeset} ->
+      {:noreply, assign(socket, form: to_form(changeset))}
     end
   end
 end
