@@ -7,23 +7,23 @@ defmodule GrimWeb.UserLive.Scrolls do
     <Layouts.app flash={@flash} current_scope={@current_scope}>
       <div class="flex">
         <div class="w-1/4">
-          <h1 class="text-4xl font-bold">lipu ale</h1>
           <.scroll_list scrolls={@scrolls} />
           <button class="btn" id="create-button" phx-hook="NewScroll">
             o open e lipu sin
           </button>
         </div>
 
-        <div id="create-form" class="hidden w-1/4">
-          <h1 class="text-4xl font-bold">lipu sin</h1>
+        <div id="create-form" class="hidden mb-8 w-3/4">
           <.form as={:scroll} for={@create_form} id="new-scroll" phx-submit="create-scroll">
             <.input
+              class="h-9 border-color-red-400 focus:outline-none text-4xl font-bold"
               field={@create_form[:name]}
+              value="lipu sin"
             />
             <.input
               field={@create_form[:content]}
               type="textarea"
-              class="w-full h-100 resize-none border-1"
+              class="w-full h-100 resize-none border-0 focus:outline-none text-xl"
             />
             <button class="btn">o pali</button>
           </.form>
