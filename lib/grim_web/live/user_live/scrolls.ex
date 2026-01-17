@@ -58,7 +58,8 @@ defmodule GrimWeb.UserLive.Scrolls do
     user = socket.assigns.current_scope.user
     scrolls = Grim.Repo.preload(user, :scrolls).scrolls
 
-    scroll = Enum.at(scrolls, 0)
+    scroll = List.first(scrolls) || new_empty_scroll()
+
     form = scroll
       |> Ecto.Changeset.change()
       |> to_form()
@@ -72,7 +73,7 @@ defmodule GrimWeb.UserLive.Scrolls do
 
   @impl true
   def handle_event("new_scroll", _params, socket) do
-    scroll = %Grim.Scroll{name: "New note ..."}
+    scroll = new_empty_scroll()
     form = scroll
            |> Ecto.Changeset.change()
            |> to_form()
@@ -156,5 +157,9 @@ defmodule GrimWeb.UserLive.Scrolls do
       {:error, changeset} ->
       {:noreply, assign(socket, form: to_form(changeset))}
     end
+  end
+
+  defp new_empty_scroll do
+    %Grim.Scroll{name: "New note ..."}
   end
 end

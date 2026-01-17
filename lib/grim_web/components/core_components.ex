@@ -97,9 +97,14 @@ defmodule GrimWeb.CoreComponents do
     variants = %{"primary" => "btn-primary", nil => "btn-primary btn-soft"}
 
     assigns =
-      assign_new(assigns, :class, fn ->
-        ["btn", Map.fetch!(variants, assigns[:variant])]
-      end)
+      assigns
+      |> assign_new(:class, fn -> [] end)
+      |> assign(:class, List.flatten([
+        "btn",
+        "mt-4",
+        Map.fetch!(variants, assigns[:variant]),
+        Map.get(assigns, :class, [])
+      ]))
 
     if rest[:href] || rest[:navigate] || rest[:patch] do
       ~H"""
