@@ -17,6 +17,7 @@ defmodule GrimWeb.UserLive.Settings do
       </div>
 
       <div class="p-8">
+        <a class="btn mb-8" href="/scrolls">Go back</a>
         <.form for={@email_form} id="email_form" phx-submit="update_email" phx-change="validate_email">
           <.input
             field={@email_form[:email]}
