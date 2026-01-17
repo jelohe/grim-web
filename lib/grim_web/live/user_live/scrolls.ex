@@ -8,7 +8,7 @@ defmodule GrimWeb.UserLive.Scrolls do
       <div class="flex">
         <div class="w-1/4">
           <button class="btn w-full" id="create-button" phx-click="new_scroll">
-            Create a note
+            {gettext("Create a note")}
           </button>
           <.scroll_list scrolls={@scrolls} />
         </div>
@@ -29,7 +29,9 @@ defmodule GrimWeb.UserLive.Scrolls do
               type="textarea"
               class="h-100 resize-none border-0 focus:outline-none text-base box-border px-8 min-w-0 w-full"
             />
-            <button class="btn w-full">Save</button>
+            <button class="btn w-full">
+              {gettext("Save")}
+            </button>
           </.form>
         </div>
       </div>
@@ -55,6 +57,7 @@ defmodule GrimWeb.UserLive.Scrolls do
 
   @impl true
   def mount(_params, _session, socket) do
+    Gettext.put_locale(GrimWeb.Gettext, "en")
     user = socket.assigns.current_scope.user
     scrolls = Grim.Repo.preload(user, :scrolls).scrolls
 
@@ -171,6 +174,6 @@ defmodule GrimWeb.UserLive.Scrolls do
   end
 
   defp new_empty_scroll do
-    %Grim.Scroll{name: "New note ..."}
+    %Grim.Scroll{name: gettext("New note ...")}
   end
 end

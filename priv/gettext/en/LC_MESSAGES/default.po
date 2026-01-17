@@ -1,0 +1,78 @@
+## This file is a PO Template file.
+##
+## "msgid"s here are often extracted from source code.
+## Add new messages manually only if they're dynamic
+## messages that can't be statically extracted.
+##
+## Run "mix gettext.extract" to bring this file up to
+## date. Leave "msgstr"s empty as changing them here has no
+## effect: edit them in PO (.po) files instead.
+#
+msgid ""
+msgstr ""
+
+#: lib/grim_web/components/core_components.ex:376
+#, elixir-autogen, elixir-format
+msgid "Actions"
+msgstr ""
+
+#: lib/grim_web/components/layouts.ex:72
+#: lib/grim_web/components/layouts.ex:84
+#, elixir-autogen, elixir-format
+msgid "Attempting to reconnect"
+msgstr ""
+
+#: lib/grim_web/live/user_live/scrolls.ex:11
+#, elixir-autogen, elixir-format
+msgid "Create a note"
+msgstr ""
+
+#: lib/grim_web/live/user_live/scrolls.ex:177
+#, elixir-autogen, elixir-format
+msgid "New note ..."
+msgstr ""
+
+#: lib/grim_web/live/user_live/scrolls.ex:33
+#, elixir-autogen, elixir-format
+msgid "Save"
+msgstr ""
+
+#: lib/grim_web/components/layouts.ex:79
+#, elixir-autogen, elixir-format
+msgid "Something went wrong!"
+msgstr ""
+
+#: lib/grim_web/components/layouts.ex:67
+#, elixir-autogen, elixir-format
+msgid "We can't find the internet"
+msgstr ""
+
+#: lib/grim_web/components/core_components.ex:74
+#, elixir-autogen, elixir-format
+msgid "close"
+msgstr ""
+
+#: lib/grim_web/components/layouts/root.html.heex:58
+#, elixir-autogen, elixir-format
+msgid "Log in"
+msgstr ""
+
+#: lib/grim_web/components/layouts/root.html.heex:51
+#, elixir-autogen, elixir-format
+msgid "Log out"
+msgstr ""
+
+#: lib/grim_web/components/layouts/root.html.heex:43
+#, elixir-autogen, elixir-format
+msgid "Notes"
+msgstr ""
+
+#: lib/grim_web/components/layouts/root.html.heex:55
+#, elixir-autogen, elixir-format
+msgid "Register"
+msgstr ""
+
+#: lib/grim_web/components/layouts/root.html.heex:47
+#, elixir-autogen, elixir-format
+msgid "Settings"
+msgstr ""

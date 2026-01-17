@@ -208,5 +208,12 @@ defmodule GrimWeb.UserLive.SettingsTest do
       assert %{"error" => message} = flash
       assert message == "You must log in to access this page."
     end
+
+    test "allows user to change the language", %{conn: conn} do
+      {:ok, _lv, html} =
+        conn
+        |> log_in_user(user_fixture())
+        |> live(~p"/users/settings")
+    end
   end
 end

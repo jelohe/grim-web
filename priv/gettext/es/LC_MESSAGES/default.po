@@ -1,0 +1,68 @@
+msgid ""
+msgstr ""
+
+#: lib/grim_web/components/core_components.ex:376
+#, elixir-autogen, elixir-format
+msgid "Actions"
+msgstr "Acciones"
+
+#: lib/grim_web/components/layouts.ex:72
+#: lib/grim_web/components/layouts.ex:84
+#, elixir-autogen, elixir-format
+msgid "Attempting to reconnect"
+msgstr "Intentando reconectar"
+
+#: lib/grim_web/live/user_live/scrolls.ex:11
+#, elixir-autogen, elixir-format
+msgid "Create a note"
+msgstr "Crear una nota"
+
+#: lib/grim_web/live/user_live/scrolls.ex:177
+#, elixir-autogen, elixir-format
+msgid "New note ..."
+msgstr "Nueva nota ..."
+
+#: lib/grim_web/live/user_live/scrolls.ex:33
+#, elixir-autogen, elixir-format
+msgid "Save"
+msgstr "Guardar"
+
+#: lib/grim_web/components/layouts.ex:79
+#, elixir-autogen, elixir-format
+msgid "Something went wrong!"
+msgstr "Algo ha ido mal"
+
+#: lib/grim_web/components/layouts.ex:67
+#, elixir-autogen, elixir-format
+msgid "We can't find the internet"
+msgstr "No hay conexión a internet"
+
+#: lib/grim_web/components/core_components.ex:74
+#, elixir-autogen, elixir-format
+msgid "close"
+msgstr "cerrar"
+
+#: lib/grim_web/components/layouts/root.html.heex:58
+#, elixir-autogen, elixir-format
+msgid "Log in"
+msgstr "Acceder"
+
+#: lib/grim_web/components/layouts/root.html.heex:51
+#, elixir-autogen, elixir-format
+msgid "Log out"
+msgstr "Cerrar sesión"
+
+#: lib/grim_web/components/layouts/root.html.heex:43
+#, elixir-autogen, elixir-format
+msgid "Notes"
+msgstr "Notas"
+
+#: lib/grim_web/components/layouts/root.html.heex:55
+#, elixir-autogen, elixir-format
+msgid "Register"
+msgstr "Registrarse"
+
+#: lib/grim_web/components/layouts/root.html.heex:47
+#, elixir-autogen, elixir-format
+msgid "Settings"
+msgstr "Ajustes"

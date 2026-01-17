@@ -16,8 +16,7 @@ defmodule GrimWeb.UserLive.Settings do
         </.header>
       </div>
 
-      <div class="p-8">
-        <a class="btn mb-8" href="/scrolls">Go back</a>
+      <div class="m-auto max-w-md">
         <.form for={@email_form} id="email_form" phx-submit="update_email" phx-change="validate_email">
           <.input
             field={@email_form[:email]}
@@ -64,6 +63,50 @@ defmodule GrimWeb.UserLive.Settings do
             Save Password
           </.button>
         </.form>
+
+        <div class="divider" />
+
+        <h2 class="mb-4 text-md">{gettext("Language")}</h2>
+        <form phx-change="update_language">
+          <div>
+            <input
+              class="cursor-pointer"
+              id="lang-en"
+              name="lang"
+              type="radio"
+              value="en"
+              checked={@locale == "en"}
+            />
+            <label
+              class={[
+                "label text-sm cursor-pointer",
+                @locale == "en" && "font-bold"
+              ]}
+              for="lang-en"
+            >
+              {gettext("English")}
+            </label>
+          </div>
+          <div>
+            <input
+              class="cursor-pointer"
+              id="lang-es"
+              name="lang"
+              type="radio"
+              value="es"
+              checked={@locale == "es"}
+            />
+            <label
+              class={[
+                "label text-sm cursor-pointer",
+                @locale == "es" && "font-bold"
+              ]}
+              for="lang-es"
+            >
+              {gettext("Español")}
+            </label>
+          </div>
+        </form>
       </div>
     </Layouts.app>
     """
@@ -94,6 +137,7 @@ defmodule GrimWeb.UserLive.Settings do
       |> assign(:email_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:trigger_submit, false)
+      |> assign(:locale, Gettext.get_locale())
 
     {:ok, socket}
   end
@@ -156,5 +200,12 @@ defmodule GrimWeb.UserLive.Settings do
       changeset ->
         {:noreply, assign(socket, password_form: to_form(changeset, action: :insert))}
     end
+  end
+
+  @impl true
+  def handle_event("update_language", %{"lang" => lang}, socket) do
+    Gettext.put_locale(GrimWeb.Gettext, lang)
+
+    {:noreply, assign(socket, locale: lang)}
   end
 end
