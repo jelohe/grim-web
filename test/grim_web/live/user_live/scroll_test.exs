@@ -28,8 +28,8 @@ defmodule GrimWeb.UserLive.ScrollTest do
     end
 
     test "updates an existing scroll", %{conn: conn, user: user} do
-      %Grim.Scroll{user_id: user.id, name: "old scroll", content: "old text" }
-        |> Grim.Repo.insert!()
+      %Grim.Scroll{user_id: user.id, name: "old scroll", content: "old text"}
+      |> Grim.Repo.insert!()
 
       {:ok, lv, _html} = live(conn, ~p"/scrolls")
 
@@ -48,7 +48,11 @@ defmodule GrimWeb.UserLive.ScrollTest do
     end
 
     test "clicking a scroll loads it into the editor", %{conn: conn, user: user} do
-      %Grim.Scroll{user_id: user.id, name: "existing scroll", content: "text content of the existing scroll" }
+      %Grim.Scroll{
+        user_id: user.id,
+        name: "existing scroll",
+        content: "text content of the existing scroll"
+      }
       |> Grim.Repo.insert!()
 
       {:ok, lv, _html} = live(conn, ~p"/scrolls")
@@ -58,11 +62,12 @@ defmodule GrimWeb.UserLive.ScrollTest do
       |> render_click()
 
       assert has_element?(lv, "input[value=\"existing scroll\"]")
+
       assert has_element?(
-        lv,
-        "textarea",
-        "text content of the existing scroll"
-      )
+               lv,
+               "textarea",
+               "text content of the existing scroll"
+             )
     end
   end
 end

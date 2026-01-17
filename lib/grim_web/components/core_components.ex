@@ -99,12 +99,15 @@ defmodule GrimWeb.CoreComponents do
     assigns =
       assigns
       |> assign_new(:class, fn -> [] end)
-      |> assign(:class, List.flatten([
-        "btn",
-        "mt-4",
-        Map.fetch!(variants, assigns[:variant]),
-        Map.get(assigns, :class, [])
-      ]))
+      |> assign(
+        :class,
+        List.flatten([
+          "btn",
+          "mt-4",
+          Map.fetch!(variants, assigns[:variant]),
+          Map.get(assigns, :class, [])
+        ])
+      )
 
     if rest[:href] || rest[:navigate] || rest[:patch] do
       ~H"""
