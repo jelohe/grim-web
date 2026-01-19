@@ -6,6 +6,7 @@ defmodule GrimWeb.Router do
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
+    plug GrimWeb.Plugs.SetLocale
     plug :fetch_live_flash
     plug :put_root_layout, html: {GrimWeb.Layouts, :root}
     plug :protect_from_forgery

@@ -8,6 +8,7 @@ defmodule Grim.Accounts.User do
     field :hashed_password, :string, redact: true
     field :confirmed_at, :utc_datetime
     field :authenticated_at, :utc_datetime, virtual: true
+    field :locale, :string, default: "en"
     has_many :scrolls, Grim.Scroll
     has_many :words, Grim.Word
 

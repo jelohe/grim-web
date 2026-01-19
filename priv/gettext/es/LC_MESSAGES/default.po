@@ -66,3 +66,43 @@ msgstr "Registrarse"
 #, elixir-autogen, elixir-format
 msgid "Settings"
 msgstr "Ajustes"
+
+#: lib/grim_web/live/user_live/settings.ex:14
+#, elixir-autogen, elixir-format
+msgid "Account Settings"
+msgstr "Configuración de cuenta"
+
+#: lib/grim_web/live/user_live/settings.ex:31
+#, elixir-autogen, elixir-format
+msgid "Change Email"
+msgstr "Cambiar Email"
+
+#: lib/grim_web/live/user_live/settings.ex:30
+#, elixir-autogen, elixir-format
+msgid "Changing..."
+msgstr "Cambiando..."
+
+#: lib/grim_web/live/user_live/settings.ex:73
+#, elixir-autogen, elixir-format
+msgid "Language"
+msgstr "Idioma"
+
+#: lib/grim_web/live/user_live/settings.ex:16
+#, elixir-autogen, elixir-format
+msgid "Manage your account email address and password settings"
+msgstr "Gestiona tu cuenta"
+
+#: lib/grim_web/live/user_live/settings.ex:56
+#, elixir-autogen, elixir-format
+msgid "New password"
+msgstr "Nueva contraseña"
+
+#: lib/grim_web/live/user_live/settings.ex:67
+#, elixir-autogen, elixir-format
+msgid "Save Password"
+msgstr "Guardar contraseña"
+
+#: lib/grim_web/live/user_live/settings.ex:66
+#, elixir-autogen, elixir-format
+msgid "Saving..."
+msgstr "Guardando..."

@@ -57,10 +57,10 @@ defmodule GrimWeb.UserLive.Scrolls do
 
   @impl true
   def mount(_params, _session, socket) do
-    Gettext.put_locale(GrimWeb.Gettext, "en")
     user = socket.assigns.current_scope.user
-    scrolls = Grim.Repo.preload(user, :scrolls).scrolls
+    Gettext.put_locale(GrimWeb.Gettext, user.locale)
 
+    scrolls = Grim.Repo.preload(user, :scrolls).scrolls
     scroll = List.first(scrolls) || new_empty_scroll()
 
     form =

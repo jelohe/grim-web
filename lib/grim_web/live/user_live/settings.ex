@@ -11,8 +11,10 @@ defmodule GrimWeb.UserLive.Settings do
     <Layouts.app flash={@flash} current_scope={@current_scope}>
       <div class="text-center">
         <.header>
-          Account Settings
-          <:subtitle>Manage your account email address and password settings</:subtitle>
+          {gettext("Account Settings")}
+          <:subtitle>
+            {gettext("Manage your account email address and password settings")}
+          </:subtitle>
         </.header>
       </div>
 
@@ -25,7 +27,9 @@ defmodule GrimWeb.UserLive.Settings do
             autocomplete="username"
             required
           />
-          <.button variant="primary" phx-disable-with="Changing...">Change Email</.button>
+          <.button variant="primary" phx-disable-with={gettext("Changing...")}>
+            {gettext("Change Email")}
+          </.button>
         </.form>
 
         <div class="divider" />
@@ -49,7 +53,7 @@ defmodule GrimWeb.UserLive.Settings do
           <.input
             field={@password_form[:password]}
             type="password"
-            label="New password"
+            label={gettext("New password")}
             autocomplete="new-password"
             required
           />
@@ -59,8 +63,8 @@ defmodule GrimWeb.UserLive.Settings do
             label="Confirm new password"
             autocomplete="new-password"
           />
-          <.button variant="primary" phx-disable-with="Saving...">
-            Save Password
+          <.button variant="primary" phx-disable-with={gettext("Saving...")}>
+            {gettext("Save Password")}
           </.button>
         </.form>
 
@@ -84,7 +88,7 @@ defmodule GrimWeb.UserLive.Settings do
               ]}
               for="lang-en"
             >
-              {gettext("English")}
+              English
             </label>
           </div>
           <div>
@@ -103,7 +107,7 @@ defmodule GrimWeb.UserLive.Settings do
               ]}
               for="lang-es"
             >
-              {gettext("Español")}
+              Español
             </label>
           </div>
         </form>
@@ -114,6 +118,9 @@ defmodule GrimWeb.UserLive.Settings do
 
   @impl true
   def mount(%{"token" => token}, _session, socket) do
+    user = socket.assigns.current_scope.user
+    Gettext.put_locale(GrimWeb.Gettext, user.locale)
+
     socket =
       case Accounts.update_user_email(socket.assigns.current_scope.user, token) do
         {:ok, _user} ->
@@ -128,6 +135,7 @@ defmodule GrimWeb.UserLive.Settings do
 
   def mount(_params, _session, socket) do
     user = socket.assigns.current_scope.user
+    Gettext.put_locale(GrimWeb.Gettext, user.locale)
     email_changeset = Accounts.change_user_email(user, %{}, validate_unique: false)
     password_changeset = Accounts.change_user_password(user, %{}, hash_password: false)
 
@@ -137,7 +145,7 @@ defmodule GrimWeb.UserLive.Settings do
       |> assign(:email_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:trigger_submit, false)
-      |> assign(:locale, Gettext.get_locale())
+      |> assign(:locale, user.locale())
 
     {:ok, socket}
   end
@@ -204,8 +212,11 @@ defmodule GrimWeb.UserLive.Settings do
 
   @impl true
   def handle_event("update_language", %{"lang" => lang}, socket) do
-    Gettext.put_locale(GrimWeb.Gettext, lang)
+    socket.assigns.current_scope.user
+    |> Ecto.Changeset.change(locale: lang)
+    |> Grim.Repo.update()
 
-    {:noreply, assign(socket, locale: lang)}
+    socket = assign(socket, locale: lang)
+    {:noreply, redirect(socket, to: ~p"/users/settings")}
   end
 end
