@@ -1,4 +1,4 @@
-defmodule GrimWeb.UserLive.Scrolls do
+defmodule GrimWeb.Scrolls do
   use GrimWeb, :live_view
 
   @impl true
@@ -164,7 +164,7 @@ defmodule GrimWeb.UserLive.Scrolls do
         {:noreply,
          socket
          |> put_flash(:info, "scroll created")
-         |> assign(:scroll, scroll)
+         |> assign(:scroll, updated_scroll)
          |> assign(:scrolls, scrolls)
          |> assign(:form, to_form(Ecto.Changeset.change(scroll)))}
 
