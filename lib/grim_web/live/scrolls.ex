@@ -13,27 +13,33 @@ defmodule GrimWeb.Scrolls do
           <.scroll_list scrolls={@scrolls} />
         </div>
 
-        <div id="create-form" class="w-3/4 border-l-1 border-base-200">
-          <.form
-            as={:scroll}
-            for={@form}
-            id="scroll-editor"
-            phx-submit="save_scroll"
-          >
-            <.input
-              class="h-9 border-y-1 border-base-200 focus:outline-none text-4xl font-bold box-border p-8 min-w-0 w-full"
-              field={@form[:name]}
-            />
-            <.input
-              field={@form[:content]}
-              type="textarea"
-              class="h-100 resize-none border-0 focus:outline-none text-base box-border px-8 min-w-0 w-full"
-            />
-            <button class="btn w-full">
-              {gettext("Save")}
-            </button>
-          </.form>
-        </div>
+          <div id="create-form" class="w-3/4 border-l-1 border-base-200">
+            <%= if (@scroll.id) do %>
+              <button class="btn text-warning float-right" phx-click="remove_scroll">
+                {gettext("Remove")}
+              </button>
+            <% end %>
+            <.form
+              class="clear-both"
+              as={:scroll}
+              for={@form}
+              id="scroll-editor"
+              phx-submit="save_scroll"
+            >
+              <.input
+                class="h-9 border-y-1 border-base-200 focus:outline-none text-4xl font-bold box-border p-8 min-w-0 w-full"
+                field={@form[:name]}
+              />
+              <.input
+                field={@form[:content]}
+                type="textarea"
+                class="h-100 resize-none border-0 focus:outline-none text-base box-border px-8 min-w-0 w-full"
+              />
+              <button class="btn w-full">
+                {gettext("Save")}
+              </button>
+            </.form>
+          </div>
       </div>
     </Layouts.app>
     """
@@ -69,11 +75,11 @@ defmodule GrimWeb.Scrolls do
       |> to_form()
 
     {:ok,
-     assign(socket,
-       scrolls: scrolls,
-       scroll: scroll,
-       form: form
-     )}
+      assign(socket,
+        scrolls: scrolls,
+        scroll: scroll,
+        form: form
+      )}
   end
 
   @impl true
@@ -86,11 +92,11 @@ defmodule GrimWeb.Scrolls do
       |> to_form()
 
     {:noreply,
-     assign(
-       socket,
-       scroll: scroll,
-       form: form
-     )}
+      assign(
+        socket,
+        scroll: scroll,
+        form: form
+      )}
   end
 
   @impl true
@@ -107,11 +113,38 @@ defmodule GrimWeb.Scrolls do
       |> to_form()
 
     {:noreply,
-     assign(
-       socket,
-       scroll: scroll,
-       form: form
-     )}
+      assign(
+        socket,
+        scroll: scroll,
+        form: form
+      )}
+  end
+
+  def handle_event("remove_scroll", _, socket) do
+    scroll = socket.assigns.scroll
+
+    {:ok, _} = Grim.Repo.delete(scroll)
+
+    scrolls = socket.assigns.scrolls
+    |> Enum.reject(fn sc -> sc.id == scroll.id end)
+
+    case scrolls do
+      [first | _] ->
+        {:noreply,
+          socket
+          |> assign(scrolls: scrolls)
+          |> assign(scroll: first)
+          |> assign(:form, to_form(Ecto.Changeset.change(first)))
+        }
+
+      [] ->
+        {:noreply,
+          socket
+          |> assign(scrolls: [])
+          |> assign(scroll: new_empty_scroll())
+          |> assign(:form, to_form(Ecto.Changeset.change(new_empty_scroll())))
+        }
+      end
   end
 
   @impl true
@@ -136,15 +169,15 @@ defmodule GrimWeb.Scrolls do
 
     case Grim.Repo.insert(changeset) do
       {:ok, scroll} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "scroll created")
-         |> assign(:scroll, scroll)
-         |> assign(:scrolls, [scroll | socket.assigns.scrolls])
-         |> assign(:form, to_form(Ecto.Changeset.change(scroll)))}
+      {:noreply,
+        socket
+        |> put_flash(:info, gettext("scroll created"))
+        |> assign(:scroll, scroll)
+        |> assign(:scrolls, [scroll | socket.assigns.scrolls])
+        |> assign(:form, to_form(Ecto.Changeset.change(scroll)))}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, form: to_form(changeset))}
+      {:noreply, assign(socket, form: to_form(changeset))}
     end
   end
 
@@ -155,21 +188,21 @@ defmodule GrimWeb.Scrolls do
 
     case Grim.Repo.update(changeset) do
       {:ok, updated_scroll} ->
-        scrolls =
-          socket.assigns.scrolls
-          |> Enum.map(fn s ->
-            if s.id == updated_scroll.id, do: updated_scroll, else: s
-          end)
+      scrolls =
+        socket.assigns.scrolls
+        |> Enum.map(fn s ->
+          if s.id == updated_scroll.id, do: updated_scroll, else: s
+        end)
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "scroll created")
-         |> assign(:scroll, updated_scroll)
-         |> assign(:scrolls, scrolls)
-         |> assign(:form, to_form(Ecto.Changeset.change(scroll)))}
+      {:noreply,
+        socket
+        |> put_flash(:info, gettext("scroll updated"))
+        |> assign(:scroll, updated_scroll)
+        |> assign(:scrolls, scrolls)
+        |> assign(:form, to_form(Ecto.Changeset.change(scroll)))}
 
       {:error, changeset} ->
-        {:noreply, assign(socket, form: to_form(changeset))}
+      {:noreply, assign(socket, form: to_form(changeset))}
     end
   end
 
