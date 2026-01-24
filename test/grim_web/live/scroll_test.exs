@@ -22,7 +22,7 @@ defmodule GrimWeb.ScrollTest do
 
       lv
       |> form("#scroll-editor", scroll: %{name: "my note", content: "hello"})
-      |> render_submit()
+      |> render_change()
 
       assert has_element?(lv, "li", "my note")
     end
@@ -41,7 +41,7 @@ defmodule GrimWeb.ScrollTest do
 
       lv
       |> form("#scroll-editor", scroll: %{name: "new scroll", content: "new text"})
-      |> render_submit()
+      |> render_change()
 
       assert has_element?(lv, "li", "new scroll")
       refute has_element?(lv, "li", "old scroll")

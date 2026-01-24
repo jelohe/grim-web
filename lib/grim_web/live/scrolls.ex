@@ -24,20 +24,19 @@ defmodule GrimWeb.Scrolls do
               as={:scroll}
               for={@form}
               id="scroll-editor"
-              phx-submit="save_scroll"
+              phx-change="autosave_scroll"
             >
               <.input
+                phx-debounce="500"
                 class="h-9 border-y-1 border-base-200 focus:outline-none text-4xl font-bold box-border p-8 min-w-0 w-full"
                 field={@form[:name]}
               />
               <.input
+                phx-debounce="500"
                 field={@form[:content]}
                 type="textarea"
                 class="h-100 resize-none border-0 focus:outline-none text-base box-border px-8 min-w-0 w-full"
               />
-              <button class="btn w-full">
-                {gettext("Save")}
-              </button>
             </.form>
           </div>
       </div>
@@ -153,7 +152,7 @@ defmodule GrimWeb.Scrolls do
   end
 
   @impl true
-  def handle_event("save_scroll", %{"scroll" => scroll_params}, socket) do
+  def handle_event("autosave_scroll", %{"scroll" => scroll_params}, socket) do
     scope = socket.assigns.current_scope
     user = scope.user
     scroll = socket.assigns.scroll
@@ -176,7 +175,6 @@ defmodule GrimWeb.Scrolls do
       {:ok, scroll} ->
       {:noreply,
         socket
-        |> put_flash(:info, gettext("scroll created"))
         |> assign(:scroll, scroll)
         |> assign(:scrolls, [scroll | socket.assigns.scrolls])
         |> assign(:form, to_form(Ecto.Changeset.change(scroll)))}
@@ -201,7 +199,6 @@ defmodule GrimWeb.Scrolls do
 
       {:noreply,
         socket
-        |> put_flash(:info, gettext("scroll updated"))
         |> assign(:scroll, updated_scroll)
         |> assign(:scrolls, scrolls)
         |> assign(:form, to_form(Ecto.Changeset.change(scroll)))}
