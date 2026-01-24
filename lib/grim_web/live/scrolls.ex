@@ -10,7 +10,7 @@ defmodule GrimWeb.Scrolls do
           <button class="btn w-full" id="create-button" phx-click="new_scroll">
             {gettext("Create a note")}
           </button>
-          <.scroll_list scrolls={@scrolls} />
+          <.scroll_list selected={@scroll} scrolls={@scrolls} />
         </div>
 
           <div id="create-form" class="w-3/4 border-l-1 border-base-200">
@@ -49,10 +49,15 @@ defmodule GrimWeb.Scrolls do
     ~H"""
     <ul class="border-base-200 border-b-1 border-t-1 divide-base-200 grid divide-y-1">
       <%= for scroll <- @scrolls do %>
+        <% base_class = "hover:bg-neutral/[40%] px-2 py-2 text-ellipsis text-nowrap w-full min-w-0 truncate cursor-pointer "
+          selected_class = "text-primary-content bg-neutral font-bold"
+        %>
         <li
           phx-click="open_scroll"
           phx-value-id={scroll.id}
-          class="px-2 py-2 text-ellipsis text-nowrap w-full min-w-0 truncate cursor-pointer"
+          bg-neutral
+          class={
+            base_class <> (if scroll.id == @selected.id, do: selected_class, else: "")}
         >
           {scroll.name}
         </li>

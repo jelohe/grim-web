@@ -210,7 +210,7 @@ defmodule GrimWeb.UserLive.SettingsTest do
     end
 
     test "allows user to change the language", %{conn: conn} do
-      {:ok, _lv, html} =
+      {:ok, _lv, _html} =
         conn
         |> log_in_user(user_fixture())
         |> live(~p"/users/settings")
