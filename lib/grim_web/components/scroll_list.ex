@@ -6,9 +6,9 @@ defmodule GrimWeb.ScrollList do
     <ul class="border-base-200 border-b-1 border-t-1 divide-base-200 grid divide-y-1">
       <%= for scroll <- @scrolls do %>
         <% base_class =
-          "hover:bg-neutral/[40%] px-2 py-2 text-ellipsis text-nowrap w-full min-w-0 truncate cursor-pointer "
+          "opacity-80 hover:opacity-100 px-2 py-2 text-ellipsis text-nowrap w-full min-w-0 truncate cursor-pointer text-lg font-light"
 
-        selected_class = "text-primary-content bg-neutral font-bold" %>
+        selected_class = "brightness-200 !opacity-100 text-content bg-base-100 brightness-200 font-bold" %>
         <li
           phx-click="open_scroll"
           phx-value-id={scroll.id}

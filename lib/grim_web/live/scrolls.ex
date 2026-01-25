@@ -2,6 +2,7 @@ defmodule GrimWeb.Scrolls do
   use GrimWeb, :live_view
 
   import GrimWeb.ScrollList
+  import GrimWeb.Layouts
 
   @impl true
   def render(assigns) do
@@ -27,6 +28,9 @@ defmodule GrimWeb.Scrolls do
             <.icon name="hero-document-plus" class="w-5 h-5" />
           </button>
         </div>
+
+    <!-- mid -->
+        <div><.theme_toggle /></div>
         
     <!-- right -->
         <%= if (@scroll.id) do %>
@@ -49,7 +53,6 @@ defmodule GrimWeb.Scrolls do
           <div class=" h-11 flex justify-between bg-base-200">
             <.link
               href={~p"/users/settings"}
-              method="delete"
               class="p-3 h-full border-box text-base cursor-pointer hover:bg-neutral/[40%]"
             >
               <.icon name="hero-cog-6-tooth" class="w-6 h-6 -mt-2" />
