@@ -15,7 +15,7 @@ defmodule Grim.Scroll do
   def changeset(scroll, attrs, user_scope) do
     scroll
     |> cast(attrs, [:name, :content])
-    |> validate_required([:name, :content])
+    |> validate_required([:name])
     |> put_assoc(:user, user_scope.user)
   end
 end

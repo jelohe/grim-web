@@ -49,6 +49,19 @@ topbar.config({barColors: {0: "#29d"}, shadowColor: "rgba(0, 0, 0, .3)"})
 window.addEventListener("phx:page-loading-start", _info => topbar.show(300))
 window.addEventListener("phx:page-loading-stop", _info => topbar.hide())
 
+// Custom code
+window.toggleSidebar = function() {
+  const sidebar = document.getElementById("sidebar")
+
+  if (sidebar.classList.contains("w-64")) {
+    sidebar.classList.remove("w-64")
+    sidebar.classList.add("w-0")
+  } else {
+    sidebar.classList.remove("w-0")
+    sidebar.classList.add("w-64")
+  }
+}
+
 // connect if there are any LiveViews on the page
 liveSocket.connect()
 

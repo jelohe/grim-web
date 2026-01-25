@@ -6,6 +6,6 @@ defmodule GrimWeb.PageController do
   end
 
   def home(conn, _params) do
-      render(conn, :home)
+    render(conn, :home)
   end
 end

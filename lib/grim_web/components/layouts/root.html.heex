@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="h-full" lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -30,41 +30,41 @@
       })();
     </script>
   </head>
-  <body class="min-h-screen flex flex-col">
-    <div class="flex h-16">
-    <a
-      class="flex items-center"
-      href="/"
-    >
-      <.logo class="mt-2 ml-4 w-10 h-10 text-neutral" />
-    </a>
-      <ul class="menu menu-horizontal w-full relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
-        <li>
-          <div><.theme_toggle /></div>
-        </li>
-        <%= if @current_scope do %>
-          <%= if @conn.request_path =~ "/users/settings" do %>
-            <li>
-              <.link href={~p"/scrolls"}>{gettext("Notes")}</.link>
-            </li>
-          <% else %>
-            <li>
-              <.link href={~p"/users/settings"}>{gettext("Settings")}</.link>
-            </li>
-          <% end %>
-          <li>
-            <.link href={~p"/users/log-out"} method="delete">{gettext("Log out")}</.link>
-          </li>
-        <% else %>
-          <li>
-            <.link href={~p"/users/register"}>{gettext("Register")}</.link>
-          </li>
-          <li>
-            <.link href={~p"/users/log-in"}>{gettext("Log in")}</.link>
-          </li>
-        <% end %>
-      </ul>
-    </div>
+  <body class="">
+    <%!-- <div class="flex h-16"> --%>
+    <%!-- <a --%>
+    <%!--   class="flex items-center" --%>
+    <%!--   href="/" --%>
+    <%!-- > --%>
+    <%!--   <.logo class="mt-2 ml-4 w-10 h-10 text-neutral" /> --%>
+    <%!-- </a> --%>
+    <%!--   <ul class="menu menu-horizontal w-full relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end"> --%>
+    <%!--     <li> --%>
+          <%!-- <div><.theme_toggle /></div> --%>
+    <%!--     </li> --%>
+    <%!--     <%= if @current_scope do %> --%>
+    <%!--       <%= if @conn.request_path =~ "/users/settings" do %> --%>
+    <%!--         <li> --%>
+    <%!--           <.link href={~p"/scrolls"}>{gettext("Notes")}</.link> --%>
+    <%!--         </li> --%>
+    <%!--       <% else %> --%>
+    <%!--         <li> --%>
+    <%!--           <.link href={~p"/users/settings"}>{gettext("Settings")}</.link> --%>
+    <%!--         </li> --%>
+    <%!--       <% end %> --%>
+    <%!--       <li> --%>
+    <%!--         <.link href={~p"/users/log-out"} method="delete">{gettext("Log out")}</.link> --%>
+    <%!--       </li> --%>
+    <%!--     <% else %> --%>
+    <%!--       <li> --%>
+    <%!--         <.link href={~p"/users/register"}>{gettext("Register")}</.link> --%>
+    <%!--       </li> --%>
+    <%!--       <li> --%>
+    <%!--         <.link href={~p"/users/log-in"}>{gettext("Log in")}</.link> --%>
+    <%!--       </li> --%>
+    <%!--     <% end %> --%>
+    <%!--   </ul> --%>
+    <%!-- </div> --%>
     {@inner_content}
   </body>
 </html>

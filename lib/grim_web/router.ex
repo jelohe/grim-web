@@ -54,6 +54,7 @@ defmodule GrimWeb.Router do
     live_session :require_authenticated_user,
       on_mount: [{GrimWeb.UserAuth, :require_authenticated}] do
       # on_mount: GrimWeb.MountHook do
+      live "/playground", Playground
       live "/scrolls", Scrolls
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email

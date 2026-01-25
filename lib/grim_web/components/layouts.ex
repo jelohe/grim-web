@@ -35,8 +35,8 @@ defmodule GrimWeb.Layouts do
 
   def app(assigns) do
     ~H"""
-    <main class="">
-      <div class="space-y-4">
+    <main class="h-screen min-h-screen">
+      <div class="space-y-4 h-full">
         {render_slot(@inner_block)}
       </div>
     </main>
