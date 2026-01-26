@@ -40,6 +40,8 @@ defmodule GrimWeb.Scrolls do
           >
             <.icon name="hero-trash" class="w-5 h-5 -mt-1" />
           </button>
+        <% else %>
+          <span class="w-13" />
         <% end %>
       </div>
       
