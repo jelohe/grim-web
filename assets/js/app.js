@@ -53,12 +53,12 @@ window.addEventListener("phx:page-loading-stop", _info => topbar.hide())
 window.toggleSidebar = function() {
   const sidebar = document.getElementById("sidebar")
 
-  if (sidebar.classList.contains("w-64")) {
-    sidebar.classList.remove("w-64")
+  if (sidebar.classList.contains("w-128")) {
+    sidebar.classList.remove("w-128")
     sidebar.classList.add("w-0")
   } else {
     sidebar.classList.remove("w-0")
-    sidebar.classList.add("w-64")
+    sidebar.classList.add("w-128")
   }
 }
 

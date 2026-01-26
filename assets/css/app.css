@@ -102,4 +102,35 @@
 /* Make LiveView wrapper divs transparent for layout */
 [data-phx-session], [data-phx-teleported-src] { display: contents }
 
+@theme {
+    --color-bg1: #0E0F13;
+    --color-bg2: #151823;
+    --color-bg3: #1F2333;
+    --color-fg1: #E6E8EF;
+    --color-fg2: #9BA1B3;
+    --color-fg3: #5F6475;
+    --color-magic: #6E7AFF;
+}
+
+[data-theme="light"] {
+    --color-bg1: #E6E8EF;
+    --color-bg2: #9BA1B3;
+    --color-bg3: #5F6475;
+    --color-fg1: #0E0F13;
+    --color-fg2: #151823;
+    --color-fg3: #1F2333;
+    --color-magic: #6E7AFF;
+}
+
+@keyframes tilt {
+    0%, 100% {transform: rotate(0deg);}
+    25% {transform: rotate(8deg);}
+    50% {transform: rotate(-8deg);}
+    75% {transform: rotate(4deg);}
+}
+
+.animate-tilt {
+    animation: tilt 1.0s ease-in-out;
+}
+
 /* This file is for your main application CSS */

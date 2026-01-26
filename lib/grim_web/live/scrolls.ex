@@ -8,51 +8,26 @@ defmodule GrimWeb.Scrolls do
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash} current_scope={@current_scope}>
-      
-    <!-- HEADER -->
-      <div class="min-h-11 border-box p-0 m-0 h-11 flex justify-between">
-        
-    <!-- left -->
-        <div>
-          <button
-            onclick="toggleSidebar()"
-            class="px-3 h-full text-base cursor-pointer hover:bg-neutral/[40%]"
-          >
-            <.icon name="hero-bars-3-bottom-left" class="w-6 h-6" />
-          </button>
-          <button
-            class="h-11 px-4 cursor-pointer text-center hover:bg-neutral/[40%]"
-            id="create-button"
-            phx-click="new_scroll"
-          >
-            <.icon name="hero-document-plus" class="w-5 h-5" />
-          </button>
-        </div>
-
-    <!-- mid -->
-        <div><.theme_toggle /></div>
-        
-    <!-- right -->
-        <%= if (@scroll.id) do %>
-          <button
-            class="cursor-pointer hover:bg-neutral/[40%] px-4 text-warning float-right"
-            phx-click="remove_scroll"
-          >
-            <.icon name="hero-trash" class="w-5 h-5 -mt-1" />
-          </button>
-        <% else %>
-          <span class="w-13" />
-        <% end %>
-      </div>
-      
-    <!-- SIDEBAR -->
-      <div class="flex flex-1 h-[calc(100vh-2.75rem)]">
+      <!-- SIDEBAR -->
+      <div class="flex flex-1 h-[calc(100vh)]">
         <aside
           id="sidebar"
-          class="w-64 transition-all duration-300 overflow-hidden flex flex-col justify-between"
+          class="w-128 transition-all duration-300 overflow-hidden flex flex-col justify-between bg-bg2"
         >
-          <.scroll_list selected={@scroll} scrolls={@scrolls} />
-          <div class=" h-11 flex justify-between bg-base-200">
+          <div>
+            <button
+              id="create-button"
+              phx-click="new_scroll"
+              class="group transition-all ease-in-out w-full hover:text-fg1 cursor-pointer p-6 h-20 text-lg text-fg2 border-b-1 border-bg3 text-left font-bold">
+              New note
+              <.icon 
+                name="hero-document-plus" 
+                class="w-7 h-7 -mt-1 ml-2 transition-all duration-300 ease-in-out group-hover:rotate-12 group-hover:animate-tilt"
+              />
+            </button>
+            <.scroll_list selected={@scroll} scrolls={@scrolls} />
+          </div>
+          <div class=" h-11 flex justify-between border-t-1 border-bg3">
             <.link
               href={~p"/users/settings"}
               class="p-3 h-full border-box text-base cursor-pointer hover:bg-neutral/[40%]"
@@ -68,12 +43,37 @@ defmodule GrimWeb.Scrolls do
             </.link>
           </div>
         </aside>
+        <button
+          onclick="toggleSidebar()"
+          class="px-3 h-full text-base cursor-pointer bg-bg2 hover:bg-neutral/[40%]"
+        >
+          <.icon name="hero-bars-3-bottom-left" class="w-6 h-6" />
+        </button>
         
     <!-- FORM -->
         <div
           id="create-form"
-          class="border-l-1 border-base-200 w-full flex flex-col"
+          class="border-l-1 border-base-200 flex flex-col"
         >
+          
+    <!-- HEADER -->
+          <div class="min-h-11 border-box p-0 m-0 h-11 flex justify-between">
+            <!-- mid -->
+            <div><.theme_toggle /></div>
+            <!-- right -->
+            <%= if (@scroll.id) do %>
+              <button
+                class="cursor-pointer hover:bg-neutral/[40%] px-4 text-warning float-right"
+                phx-click="remove_scroll"
+              >
+                <.icon name="hero-trash" class="w-5 h-5 -mt-1" />
+              </button>
+            <% else %>
+              <span class="w-13" />
+            <% end %>
+          </div>
+          
+    <!-- FORM -->
           <.form
             class="flex-1 flex flex-col"
             as={:scroll}
