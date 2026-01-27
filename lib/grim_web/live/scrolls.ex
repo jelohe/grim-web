@@ -3,6 +3,7 @@ defmodule GrimWeb.Scrolls do
 
   import GrimWeb.ScrollList
   import GrimWeb.Layouts
+  import GrimWeb.Interaction
 
   @impl true
   def render(assigns) do
@@ -12,48 +13,45 @@ defmodule GrimWeb.Scrolls do
       <div class="flex flex-1 h-[calc(100vh)]">
         <aside
           id="sidebar"
-          class="w-128 transition-all duration-300 overflow-hidden flex flex-col justify-between bg-bg2"
+          class="w-128 h-screen flex flex-col bg-bg2 border-r-1 border-bg3"
         >
-          <div>
-            <button
-              id="create-button"
-              phx-click="new_scroll"
-              class="group transition-all ease-in-out w-full hover:text-fg1 cursor-pointer p-6 h-20 text-lg text-fg2 border-b-1 border-bg3 text-left font-bold">
-              New note
-              <.icon 
-                name="hero-document-plus" 
-                class="w-7 h-7 -mt-1 ml-2 transition-all duration-300 ease-in-out group-hover:rotate-12 group-hover:animate-tilt"
-              />
-            </button>
+          <!-- Header -->
+          <.interaction
+            id="create-button"
+            class="font-bold border-b-1 border-bg3 h-20 p-6 w-full text-left text-lg truncate shrink-0"
+            phx-click="new_scroll"
+            text={gettext("Create note")}
+            icon="hero-document-plus"
+          />
+          <div class="flex-1 overflow-y-auto min-h-0">
             <.scroll_list selected={@scroll} scrolls={@scrolls} />
           </div>
-          <div class=" h-11 flex justify-between border-t-1 border-bg3">
-            <.link
-              href={~p"/users/settings"}
-              class="p-3 h-full border-box text-base cursor-pointer hover:bg-neutral/[40%]"
-            >
-              <.icon name="hero-cog-6-tooth" class="w-6 h-6 -mt-2" />
+          <!-- Footer -->
+          <div class="h-11 shrink-0 flex justify-between border-t-1 border-bg3 text-fg2 mb-2">
+            <.link href={~p"/users/settings"}>
+              <.interaction text={gettext("Settings")} icon="hero-cog-6-tooth" class="p-3" />
             </.link>
-            <.link
-              href={~p"/users/log-out"}
-              method="delete"
-              class="text-warning p-3 h-full border-box text-base cursor-pointer hover:bg-neutral/[40%]"
-            >
-              <.icon name="hero-arrow-left-start-on-rectangle" class="w-6 h-6 -mt-2" />
+            <.link href={~p"/users/log-out"} method="delete">
+              <.interaction
+                phx-click="logout"
+                text={gettext("Sign out")}
+                icon="hero-arrow-left-start-on-rectangle"
+                class="p-3 hover:text-warning"
+              />
             </.link>
           </div>
         </aside>
-        <button
+        <.interaction
+          id="sidebar-btn"
+          class="px-3 h-full bg-bg2 border-l-1 border-bg3 cursor-w-resize"
           onclick="toggleSidebar()"
-          class="px-3 h-full text-base cursor-pointer bg-bg2 hover:bg-neutral/[40%]"
-        >
-          <.icon name="hero-bars-3-bottom-left" class="w-6 h-6" />
-        </button>
+          icon="hero-bars-3-bottom-left"
+        />
         
     <!-- FORM -->
         <div
           id="create-form"
-          class="border-l-1 border-base-200 flex flex-col"
+          class="flex flex-col w-full"
         >
           
     <!-- HEADER -->
@@ -80,11 +78,13 @@ defmodule GrimWeb.Scrolls do
             for={@form}
             id="scroll-editor"
             phx-change="autosave_scroll"
+            phx-submit="autosave_scroll"
           >
             <.input
               phx-debounce="500"
-              class="h-9 border-y-1 border-base-200 focus:outline-none text-4xl font-bold box-border p-8 min-w-0 w-full"
+              class="h-9 border-y-1 border-bg2 focus:outline-none text-4xl font-bold box-border p-8 min-w-0 w-full"
               field={@form[:name]}
+              placeholder={gettext("New note ...")}
             />
             <.input
               phx-debounce="500"
@@ -199,6 +199,13 @@ defmodule GrimWeb.Scrolls do
     end
   end
 
+  @impl true
+  def handle_event("logout", _params, socket) do
+    {:noreply,
+     socket
+     |> push_navigate(to: ~p"/users/log-out", method: :delete)}
+  end
+
   defp create_scroll(params, user, scope, socket) do
     changeset =
       %Grim.Scroll{user_id: user.id}
@@ -242,6 +249,6 @@ defmodule GrimWeb.Scrolls do
   end
 
   defp new_empty_scroll do
-    %Grim.Scroll{name: gettext("New note ...")}
+    %Grim.Scroll{}
   end
 end

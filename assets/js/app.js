@@ -52,13 +52,23 @@ window.addEventListener("phx:page-loading-stop", _info => topbar.hide())
 // Custom code
 window.toggleSidebar = function() {
   const sidebar = document.getElementById("sidebar")
+  const sidebarBtn = document.getElementById("sidebar-btn")
+  const cursorChangeMs = 100;
 
   if (sidebar.classList.contains("w-128")) {
     sidebar.classList.remove("w-128")
     sidebar.classList.add("w-0")
+    setTimeout(() => {
+      sidebarBtn.classList.remove("cursor-w-resize")
+      sidebarBtn.classList.add("cursor-e-resize")
+    }, cursorChangeMs);
   } else {
     sidebar.classList.remove("w-0")
     sidebar.classList.add("w-128")
+    setTimeout(() => {
+      sidebarBtn.classList.remove("cursor-e-resize")
+      sidebarBtn.classList.add("cursor-w-resize")
+    }, cursorChangeMs);
   }
 }
 

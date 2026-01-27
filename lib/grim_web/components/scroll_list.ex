@@ -1,15 +1,17 @@
 defmodule GrimWeb.ScrollList do
   use Phoenix.Component
+  import GrimWeb.Interaction
 
   def scroll_list(assigns) do
     ~H"""
-    <ul class="grid">
+    <ul class="grid flex-1 overflow-y-auto min-h-0">
       <%= for scroll <- @scrolls do %>
         <% base_class =
-          "text-fg2 hover:text-fg1 px-6 h-20 text-nowrap w-full min-w-0 truncate cursor-pointer text-lg font-light "
+          "text-fg2 hover:text-fg1 h-20 text-nowrap w-full min-w-0 truncate cursor-pointer text-lg font-light "
 
         selected_class =
-          "bg-bg3 !font-bold" %>
+          "bg-bg3" %>
+
         <li
           phx-click="open_scroll"
           phx-value-id={scroll.id}
@@ -17,8 +19,14 @@ defmodule GrimWeb.ScrollList do
           class={
             base_class <> (if scroll.id == @selected.id, do: selected_class, else: "")}
         >
-          <p class="mt-3 truncate text-ellipsis">{scroll.name}</p>
-          <p class="truncate text-ellipsis mt-1 font-medium text-xs transition-all break-words">{scroll.content}</p>
+          <.interaction class="h-full w-full text-left px-6">
+            <p class="truncate text-ellipsis mt-1 font-lg font-bold text-xs transition-all break-words">
+              {scroll.name}
+            </p>
+            <p class="truncate text-ellipsis mt-1 font-lg text-xs transition-all break-words">
+              {scroll.content}
+            </p>
+          </.interaction>
         </li>
       <% end %>
     </ul>
