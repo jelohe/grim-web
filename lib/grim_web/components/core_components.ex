@@ -444,7 +444,7 @@ defmodule GrimWeb.CoreComponents do
 
   def icon(%{name: "hero-" <> _} = assigns) do
     ~H"""
-    <span class={[@name, @class]} />
+    <span class={["icon", @name, @class]} />
     """
   end
 

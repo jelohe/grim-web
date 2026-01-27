@@ -129,8 +129,28 @@
     75% {transform: rotate(4deg);}
 }
 
-.animate-tilt {
-    animation: tilt 1.0s ease-in-out;
+@utility animate-tilt {
+    animation: tilt 0.3s ease-in-out;
 }
 
+@utility interaction {
+  @apply cursor-pointer select-none transition-all ease-in-out hover:text-fg1;
+}
+
+@utility interaction-span {
+  @apply inline-block transition-all duration-300 ease-in-out;
+}
+
+@utility interaction-icon {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.interaction:hover .icon {
+  @apply rotate-12
+         animate-tilt;
+}
+
+.interaction:active span {
+  @apply translate-y-1;
+}
 /* This file is for your main application CSS */

@@ -3,6 +3,7 @@ defmodule GrimWeb.Scrolls do
 
   import GrimWeb.ScrollList
   import GrimWeb.Layouts
+  import GrimWeb.Interaction
 
   @impl true
   def render(assigns) do
@@ -15,45 +16,50 @@ defmodule GrimWeb.Scrolls do
           class="w-128 transition-all duration-300 overflow-hidden flex flex-col justify-between bg-bg2"
         >
           <div>
+            <!--
             <button
               id="create-button"
               phx-click="new_scroll"
-              class="group transition-all ease-in-out w-full hover:text-fg1 cursor-pointer p-6 h-20 text-lg text-fg2 border-b-1 border-bg3 text-left font-bold">
-              New note
+              class="interaction w-full p-6 h-20 text-lg text-fg2 border-b-1 border-bg3 text-left font-bold truncate">
+              <span class="">New note</span>
               <.icon 
                 name="hero-document-plus" 
-                class="w-7 h-7 -mt-1 ml-2 transition-all duration-300 ease-in-out group-hover:rotate-12 group-hover:animate-tilt"
+                class="w-7 h-7 -mt-1 ml-2"
               />
             </button>
+            -->
+            <.interaction text="New note" icon="hero-document-plus" />
             <.scroll_list selected={@scroll} scrolls={@scrolls} />
           </div>
-          <div class=" h-11 flex justify-between border-t-1 border-bg3">
+          <div class="truncate h-11 flex justify-between border-t-1 border-bg3 text-fg2 mb-2">
             <.link
               href={~p"/users/settings"}
-              class="p-3 h-full border-box text-base cursor-pointer hover:bg-neutral/[40%]"
+              class="group p-3 h-full border-box text-base cursor-pointer hover:text-fg1 transition-all ease-in-out duration-300"
             >
-              <.icon name="hero-cog-6-tooth" class="w-6 h-6 -mt-2" />
+              Settings
+              <.icon name="hero-cog-6-tooth" class="w-6 h-6 -mt-1 group-hover:animate-tilt group-hover:rotate-24 transition-all ease-in-out duration-300" />
             </.link>
             <.link
               href={~p"/users/log-out"}
               method="delete"
-              class="text-warning p-3 h-full border-box text-base cursor-pointer hover:bg-neutral/[40%]"
+              class="group p-3 h-full border-box cursor-pointer hover:text-warning transition-all ease-in-out duration-300"
             >
-              <.icon name="hero-arrow-left-start-on-rectangle" class="w-6 h-6 -mt-2" />
+              Log out
+              <.icon name="hero-arrow-left-start-on-rectangle" class="w-6 h-6 -mt-1 group-hover:animate-tilt group-hover:rotate-12 transition-all ease-in-out duration-300" />
             </.link>
           </div>
         </aside>
         <button
           onclick="toggleSidebar()"
-          class="px-3 h-full text-base cursor-pointer bg-bg2 hover:bg-neutral/[40%]"
+          class="group px-3 h-full text-base cursor-pointer bg-bg2 text-fg2 hover:!text-fg1 border-l-1 border-bg3"
         >
-          <.icon name="hero-bars-3-bottom-left" class="w-6 h-6" />
+          <.icon name="hero-bars-3-bottom-left" class="w-7 h-7 group-hover:animate-tilt transition-all duration-300 ease-in-out group-hover:rotate-12" />
         </button>
         
     <!-- FORM -->
         <div
           id="create-form"
-          class="border-l-1 border-base-200 flex flex-col"
+          class="flex flex-col w-full"
         >
           
     <!-- HEADER -->
@@ -83,7 +89,7 @@ defmodule GrimWeb.Scrolls do
           >
             <.input
               phx-debounce="500"
-              class="h-9 border-y-1 border-base-200 focus:outline-none text-4xl font-bold box-border p-8 min-w-0 w-full"
+              class="h-9 border-y-1 border-bg2 focus:outline-none text-4xl font-bold box-border p-8 min-w-0 w-full"
               field={@form[:name]}
             />
             <.input

@@ -14,7 +14,7 @@ defmodule GrimWeb.ScrollTest do
     test "renders a create button", %{conn: conn} do
       {:ok, _lv, html} = live(conn, ~p"/scrolls")
 
-      assert html =~ "Create a note"
+      assert html =~ "New note"
     end
 
     test "creates a new scroll", %{conn: conn} do
