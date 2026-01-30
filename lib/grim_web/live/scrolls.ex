@@ -2,7 +2,6 @@ defmodule GrimWeb.Scrolls do
   use GrimWeb, :live_view
 
   import GrimWeb.ScrollList
-  import GrimWeb.Layouts
   import GrimWeb.Interaction
 
   @impl true
@@ -13,7 +12,7 @@ defmodule GrimWeb.Scrolls do
       <div class="flex flex-1 h-[calc(100vh)]">
         <aside
           id="sidebar"
-          class="w-128 h-screen flex flex-col bg-bg2 border-r-1 border-bg3"
+          class="w-128 h-screen flex flex-col bg-bg2 border-r-1 border-bg3 transition-all duration-300"
         >
           <!-- Header -->
           <.interaction
@@ -53,24 +52,6 @@ defmodule GrimWeb.Scrolls do
           id="create-form"
           class="flex flex-col w-full"
         >
-          
-    <!-- HEADER -->
-          <div class="min-h-11 border-box p-0 m-0 h-11 flex justify-between">
-            <!-- mid -->
-            <div><.theme_toggle /></div>
-            <!-- right -->
-            <%= if (@scroll.id) do %>
-              <button
-                class="cursor-pointer hover:bg-neutral/[40%] px-4 text-warning float-right"
-                phx-click="remove_scroll"
-              >
-                <.icon name="hero-trash" class="w-5 h-5 -mt-1" />
-              </button>
-            <% else %>
-              <span class="w-13" />
-            <% end %>
-          </div>
-          
     <!-- FORM -->
           <.form
             class="flex-1 flex flex-col"
@@ -80,12 +61,19 @@ defmodule GrimWeb.Scrolls do
             phx-change="autosave_scroll"
             phx-submit="autosave_scroll"
           >
-            <.input
-              phx-debounce="500"
-              class="h-9 border-y-1 border-bg2 focus:outline-none text-4xl font-bold box-border p-8 min-w-0 w-full"
-              field={@form[:name]}
-              placeholder={gettext("New note ...")}
-            />
+            <div class="flex w-full justify-between px-8 py-6 pr-2 border-b-1 border-bg2">
+              <.input
+                phx-debounce="500"
+                class="flex-1 h-9 focus:outline-none text-3xl font-bold box-border pr-4 min-w-0 w-full truncate text-ellipsis border-box"
+                field={@form[:name]}
+                placeholder={gettext("New note ...")}
+              />
+              <.interaction
+                icon="hero-trash"
+                class="pt-1 pr-4 hover:text-warning"
+                phx-click="remove_scroll"
+              />
+            </div>
             <.input
               phx-debounce="500"
               field={@form[:content]}

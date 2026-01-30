@@ -1,5 +1,6 @@
 defmodule GrimWeb.UserLive.Settings do
   use GrimWeb, :live_view
+  import GrimWeb.Layouts
 
   on_mount {GrimWeb.UserAuth, :require_sudo_mode}
 
@@ -70,45 +71,55 @@ defmodule GrimWeb.UserLive.Settings do
 
         <div class="divider" />
 
-        <h2 class="mb-4 text-md">{gettext("Language")}</h2>
         <form phx-change="update_language">
-          <div>
-            <input
-              class="cursor-pointer"
-              id="lang-en"
-              name="lang"
-              type="radio"
-              value="en"
-              checked={@locale == "en"}
-            />
-            <label
-              class={[
-                "label text-sm cursor-pointer",
-                @locale == "en" && "font-bold"
-              ]}
-              for="lang-en"
-            >
-              English
-            </label>
-          </div>
-          <div>
-            <input
-              class="cursor-pointer"
-              id="lang-es"
-              name="lang"
-              type="radio"
-              value="es"
-              checked={@locale == "es"}
-            />
-            <label
-              class={[
-                "label text-sm cursor-pointer",
-                @locale == "es" && "font-bold"
-              ]}
-              for="lang-es"
-            >
-              Español
-            </label>
+          <div class="flex">
+            <div class="flex-1">
+              <h2 class="mb-4 text-md">{gettext("Language")}</h2>
+              <div>
+                <input
+                  class="cursor-pointer"
+                  id="lang-en"
+                  name="lang"
+                  type="radio"
+                  value="en"
+                  checked={@locale == "en"}
+                />
+                <label
+                  class={[
+                    "label text-sm cursor-pointer",
+                    @locale == "en" && "font-bold"
+                  ]}
+                  for="lang-en"
+                >
+                  English
+                </label>
+              </div>
+              <div>
+              <input
+                class="cursor-pointer"
+                id="lang-es"
+                name="lang"
+                type="radio"
+                value="es"
+                checked={@locale == "es"}
+              />
+                <label
+                  class={[
+                    "label text-sm cursor-pointer",
+                    @locale == "es" && "font-bold"
+                  ]}
+                  for="lang-es"
+                >
+                  Español
+                </label>
+              </div>
+            </div>
+            <div class="flex-1">
+              <div class="inline-block">
+                <h2 class="mb-4 text-md">{gettext("Theme")}</h2>
+                <.theme_toggle />
+              </div>
+            </div>
           </div>
         </form>
       </div>
