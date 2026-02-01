@@ -52,19 +52,28 @@ window.addEventListener("phx:page-loading-stop", _info => topbar.hide())
 // Custom code
 window.toggleSidebar = function() {
   const sidebar = document.getElementById("sidebar")
+  const content = document.getElementById("create-form")
   const sidebarBtn = document.getElementById("sidebar-btn")
   const cursorChangeMs = 100;
 
-  if (sidebar.classList.contains("w-128")) {
-    sidebar.classList.remove("w-128")
-    sidebar.classList.add("w-0")
+  if (sidebar.classList.contains("sidebar-open")) {
+    sidebar.classList.remove("sidebar-open")
+    sidebar.classList.add("sidebar-close")
+
+    content.classList.add("content-open")
+    content.classList.remove("content-close")
+
     setTimeout(() => {
       sidebarBtn.classList.remove("cursor-w-resize")
       sidebarBtn.classList.add("cursor-e-resize")
     }, cursorChangeMs);
   } else {
-    sidebar.classList.remove("w-0")
-    sidebar.classList.add("w-128")
+    sidebar.classList.remove("sidebar-close")
+    sidebar.classList.add("sidebar-open")
+
+    content.classList.add("content-close")
+    content.classList.remove("content-open")
+
     setTimeout(() => {
       sidebarBtn.classList.remove("cursor-e-resize")
       sidebarBtn.classList.add("cursor-w-resize")

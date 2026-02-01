@@ -150,4 +150,20 @@
 .interaction:active .interaction-content {
   @apply translate-y-1/15;
 }
+
+.sidebar-open {
+  @apply w-screen relative;
+}
+
+.sidebar-close {
+  @apply w-0;
+}
+
+.content-open {
+  @apply w-full
+}
+
+.content-close {
+  @apply hidden w-0
+}
 /* This file is for your main application CSS */

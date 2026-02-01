@@ -12,7 +12,7 @@ defmodule GrimWeb.Scrolls do
       <div class="flex flex-1 h-[calc(100vh)]">
         <aside
           id="sidebar"
-          class="w-128 h-screen flex flex-col bg-bg2 border-r-1 border-bg3 transition-all duration-300"
+          class="w-screen h-screen flex flex-col bg-bg2 border-r-1 border-bg3 transition-all duration-300 overflow-hidden"
         >
           <!-- Header -->
           <.interaction
@@ -50,7 +50,7 @@ defmodule GrimWeb.Scrolls do
     <!-- FORM -->
         <div
           id="create-form"
-          class="flex flex-col w-full"
+          class="flex flex-col w-full content-close"
         >
     <!-- FORM -->
           <.form

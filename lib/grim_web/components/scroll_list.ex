@@ -2,6 +2,8 @@ defmodule GrimWeb.ScrollList do
   use Phoenix.Component
   import GrimWeb.Interaction
 
+  attr :scrolls, :list, default: []
+
   def scroll_list(assigns) do
     ~H"""
     <ul class="grid flex-1 overflow-y-auto min-h-0">
