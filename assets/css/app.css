@@ -152,7 +152,7 @@
 }
 
 .sidebar-open {
-  @apply w-screen relative;
+  @apply w-screen md:w-100 relative;
 }
 
 .sidebar-close {
@@ -164,6 +164,6 @@
 }
 
 .content-close {
-  @apply hidden w-0
+  @apply hidden w-0 md:w-full md:flex;
 }
 /* This file is for your main application CSS */

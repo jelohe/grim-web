@@ -3,6 +3,7 @@ defmodule GrimWeb.ScrollList do
   import GrimWeb.Interaction
 
   attr :scrolls, :list, default: []
+  attr :selected, :map, default: []
 
   def scroll_list(assigns) do
     ~H"""
