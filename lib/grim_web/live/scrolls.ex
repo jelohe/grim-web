@@ -12,7 +12,7 @@ defmodule GrimWeb.Scrolls do
       <div class="flex flex-1 h-[calc(100vh)]">
         <aside
           id="sidebar"
-          class="sidebar-open h-screen flex flex-col bg-bg2 border-r-1 border-bg3 transition-all duration-300 overflow-hidden"
+          class={"#{if @sidebar_open, do: "sidebar-open", else: "sidebar-close"} h-screen flex flex-col bg-bg2 border-r-1 border-bg3 transition-all duration-300 overflow-hidden"}
         >
           <!-- Header -->
           <.interaction
@@ -44,13 +44,14 @@ defmodule GrimWeb.Scrolls do
           id="sidebar-btn"
           class="px-3 h-full bg-bg2 border-l-1 border-bg3 cursor-w-resize"
           onclick="toggleSidebar()"
+          phx-click="toggle_sidebar"
           icon="hero-bars-3-bottom-left"
         />
         
     <!-- FORM -->
         <div
           id="create-form"
-          class="flex flex-col w-full content-close"
+          class={"#{if @sidebar_open, do: "content-open", else: "content-close"} flex flex-col w-full"}
         >
           <.form
             class="flex-1 flex flex-col"
@@ -93,9 +94,13 @@ defmodule GrimWeb.Scrolls do
 
     scrolls = Grim.Repo.preload(user, :scrolls).scrolls
     scroll = List.first(scrolls) || new_empty_scroll()
-    socket = assign(socket, scrolls: scrolls)
 
-    {:ok, assign_scroll(socket, scroll)}
+    {:ok,
+      socket
+      |> assign(scrolls: scrolls)
+      |> assign(sidebar_open: true)
+      |> assign_scroll(scroll)
+    }
   end
 
   @impl true
@@ -149,6 +154,11 @@ defmodule GrimWeb.Scrolls do
     {:noreply,
      socket
      |> push_navigate(to: ~p"/users/log-out", method: :delete)}
+  end
+
+  def handle_event("toggle_sidebar", _params, socket) do
+    {:noreply,
+     assign(socket, :sidebar_open, !socket.assigns.sidebar_open)}
   end
 
   defp create_scroll(params, socket) do
