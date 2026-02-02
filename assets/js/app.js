@@ -50,35 +50,49 @@ window.addEventListener("phx:page-loading-start", _info => topbar.show(300))
 window.addEventListener("phx:page-loading-stop", _info => topbar.hide())
 
 // Custom code
+const cursorChangeMs = 100;
 window.toggleSidebar = function() {
   const sidebar = document.getElementById("sidebar")
+
+  if (sidebar.classList.contains("sidebar-open"))
+    closeSidebar()
+  else
+    openSidebar()
+}
+
+function closeSidebar() {
+  const sidebar = document.getElementById("sidebar")
   const content = document.getElementById("create-form")
-  const sidebarBtn = document.getElementById("sidebar-btn")
-  const cursorChangeMs = 100;
 
-  if (sidebar.classList.contains("sidebar-open")) {
-    sidebar.classList.remove("sidebar-open")
-    sidebar.classList.add("sidebar-close")
+  sidebar.classList.remove("sidebar-open")
+  sidebar.classList.add("sidebar-close")
 
-    content.classList.add("content-open")
-    content.classList.remove("content-close")
+  content.classList.add("content-open")
+  content.classList.remove("content-close")
 
-    setTimeout(() => {
-      sidebarBtn.classList.remove("cursor-w-resize")
-      sidebarBtn.classList.add("cursor-e-resize")
-    }, cursorChangeMs);
-  } else {
-    sidebar.classList.remove("sidebar-close")
-    sidebar.classList.add("sidebar-open")
+  setTimeout(() => {
+    const sidebarBtn = document.getElementById("sidebar-btn")
+    sidebarBtn.classList.remove("cursor-w-resize")
+    sidebarBtn.classList.add("cursor-e-resize")
+  }, cursorChangeMs);
+}
 
-    content.classList.add("content-close")
-    content.classList.remove("content-open")
+function openSidebar() {
+  const sidebar = document.getElementById("sidebar")
+  const content = document.getElementById("create-form")
 
-    setTimeout(() => {
-      sidebarBtn.classList.remove("cursor-e-resize")
-      sidebarBtn.classList.add("cursor-w-resize")
-    }, cursorChangeMs);
-  }
+  sidebar.classList.remove("sidebar-close")
+  sidebar.classList.add("sidebar-open")
+
+  content.classList.add("content-close")
+  content.classList.remove("content-open")
+
+  setTimeout(() => {
+    const sidebarBtn = document.getElementById("sidebar-btn")
+    sidebarBtn.classList.remove("cursor-e-resize")
+    sidebarBtn.classList.add("cursor-w-resize")
+  }, cursorChangeMs);
+
 }
 
 // connect if there are any LiveViews on the page

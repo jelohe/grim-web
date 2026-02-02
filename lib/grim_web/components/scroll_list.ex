@@ -10,7 +10,7 @@ defmodule GrimWeb.ScrollList do
     <ul class="grid flex-1 overflow-y-auto min-h-0">
       <%= for scroll <- @scrolls do %>
         <% base_class =
-          "text-fg2 hover:text-fg1 h-20 text-nowrap w-full min-w-0 truncate cursor-pointer text-lg font-light "
+          "hover:brightness-100 h-20 text-nowrap w-full min-w-0 truncate cursor-pointer font-light "
 
         selected_class =
           "bg-bg3" %>
@@ -23,10 +23,10 @@ defmodule GrimWeb.ScrollList do
             base_class <> (if scroll.id == @selected.id, do: selected_class, else: "")}
         >
           <.interaction class="h-full w-full text-left px-6">
-            <p class="truncate text-ellipsis mt-1 font-lg font-bold text-xs transition-all break-words">
+            <p class="truncate text-sm text-ellipsis mt-1 font-lg font-bold transition-all break-words brightness-80">
               {scroll.name}
             </p>
-            <p class="truncate text-ellipsis mt-1 font-lg text-xs transition-all break-words">
+            <p class="truncate text-sm text-ellipsis mt-1 brightness-80 transition-all break-words">
               {scroll.content}
             </p>
           </.interaction>

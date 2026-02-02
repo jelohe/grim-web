@@ -12,7 +12,7 @@ defmodule GrimWeb.Scrolls do
       <div class="flex flex-1 h-[calc(100vh)]">
         <aside
           id="sidebar"
-          class="w-screen h-screen flex flex-col bg-bg2 border-r-1 border-bg3 transition-all duration-300 overflow-hidden"
+          class="sidebar-open h-screen flex flex-col bg-bg2 border-r-1 border-bg3 transition-all duration-300 overflow-hidden"
         >
           <!-- Header -->
           <.interaction
@@ -26,7 +26,7 @@ defmodule GrimWeb.Scrolls do
             <.scroll_list selected={@scroll} scrolls={@scrolls} />
           </div>
           <!-- Footer -->
-          <div class="h-11 shrink-0 flex justify-between border-t-1 border-bg3 text-fg2 mb-2">
+          <div class="h-11 shrink-0 flex justify-between border-t-1 border-bg3 mb-2">
             <.link href={~p"/users/settings"}>
               <.interaction text={gettext("Settings")} icon="hero-cog-6-tooth" class="p-3" />
             </.link>
@@ -52,7 +52,6 @@ defmodule GrimWeb.Scrolls do
           id="create-form"
           class="flex flex-col w-full content-close"
         >
-    <!-- FORM -->
           <.form
             class="flex-1 flex flex-col"
             as={:scroll}
@@ -64,7 +63,7 @@ defmodule GrimWeb.Scrolls do
             <div class="flex w-full justify-between px-8 py-6 pr-2 border-b-1 border-bg2">
               <.input
                 phx-debounce="500"
-                class="flex-1 h-9 focus:outline-none text-3xl font-bold box-border pr-4 min-w-0 w-full truncate text-ellipsis border-box"
+                class="flex-1 h-9 focus:outline-none text-3xl font-bold box-border pr-4 min-w-0 w-full truncate text-ellipsis border-box text-fg2"
                 field={@form[:name]}
                 placeholder={gettext("New note ...")}
               />
@@ -78,7 +77,7 @@ defmodule GrimWeb.Scrolls do
               phx-debounce="500"
               field={@form[:content]}
               type="textarea"
-              class="m-0 flex-1 p-4 resize-none border-0 focus:outline-none text-base box-border px-8 min-w-0 w-full"
+              class="m-0 flex-1 p-4 resize-none border-0 focus:outline-none text-base box-border px-8 min-w-0 w-full text-fg2"
             />
           </.form>
         </div>
@@ -94,35 +93,14 @@ defmodule GrimWeb.Scrolls do
 
     scrolls = Grim.Repo.preload(user, :scrolls).scrolls
     scroll = List.first(scrolls) || new_empty_scroll()
+    socket = assign(socket, scrolls: scrolls)
 
-    form =
-      scroll
-      |> Ecto.Changeset.change()
-      |> to_form()
-
-    {:ok,
-     assign(socket,
-       scrolls: scrolls,
-       scroll: scroll,
-       form: form
-     )}
+    {:ok, assign_scroll(socket, scroll)}
   end
 
   @impl true
   def handle_event("new_scroll", _params, socket) do
-    scroll = new_empty_scroll()
-
-    form =
-      scroll
-      |> Ecto.Changeset.change()
-      |> to_form()
-
-    {:noreply,
-     assign(
-       socket,
-       scroll: scroll,
-       form: form
-     )}
+    {:noreply, assign_scroll(socket, new_empty_scroll())}
   end
 
   @impl true
@@ -133,17 +111,7 @@ defmodule GrimWeb.Scrolls do
       socket.assigns.scrolls
       |> Enum.find_value(fn v -> if v.id == id, do: v end)
 
-    form =
-      scroll
-      |> Ecto.Changeset.change()
-      |> to_form()
-
-    {:noreply,
-     assign(
-       socket,
-       scroll: scroll,
-       form: form
-     )}
+    {:noreply, assign_scroll(socket, scroll)}
   end
 
   def handle_event("remove_scroll", _, socket) do
@@ -155,32 +123,21 @@ defmodule GrimWeb.Scrolls do
       socket.assigns.scrolls
       |> Enum.reject(fn sc -> sc.id == scroll.id end)
 
-    case scrolls do
-      [first | _] ->
-        {:noreply,
-         socket
-         |> assign(scrolls: scrolls)
-         |> assign(scroll: first)
-         |> assign(:form, to_form(Ecto.Changeset.change(first)))}
+    next_scroll = List.first(scrolls) || new_empty_scroll()
 
-      [] ->
-        {:noreply,
-         socket
-         |> assign(scrolls: [])
-         |> assign(scroll: new_empty_scroll())
-         |> assign(:form, to_form(Ecto.Changeset.change(new_empty_scroll())))}
-    end
+    {:noreply,
+     socket
+     |> assign(scrolls: scrolls)
+     |> assign_scroll(next_scroll)}
   end
 
   @impl true
   def handle_event("autosave_scroll", %{"scroll" => scroll_params}, socket) do
-    scope = socket.assigns.current_scope
-    user = scope.user
     scroll = socket.assigns.scroll
 
     case scroll.id do
       nil ->
-        create_scroll(scroll_params, user, scope, socket)
+        create_scroll(scroll_params, socket)
 
       _id ->
         update_scroll(scroll, scroll_params, socket)
@@ -194,7 +151,10 @@ defmodule GrimWeb.Scrolls do
      |> push_navigate(to: ~p"/users/log-out", method: :delete)}
   end
 
-  defp create_scroll(params, user, scope, socket) do
+  defp create_scroll(params, socket) do
+    %{current_scope: scope} = socket.assigns
+    user = scope.user
+
     changeset =
       %Grim.Scroll{user_id: user.id}
       |> Grim.Scroll.changeset(params, scope)
@@ -203,9 +163,8 @@ defmodule GrimWeb.Scrolls do
       {:ok, scroll} ->
         {:noreply,
          socket
-         |> assign(:scroll, scroll)
          |> assign(:scrolls, [scroll | socket.assigns.scrolls])
-         |> assign(:form, to_form(Ecto.Changeset.change(scroll)))}
+         |> assign_scroll(scroll)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
@@ -227,16 +186,23 @@ defmodule GrimWeb.Scrolls do
 
         {:noreply,
          socket
-         |> assign(:scroll, updated_scroll)
          |> assign(:scrolls, scrolls)
-         |> assign(:form, to_form(Ecto.Changeset.change(scroll)))}
+         |> assign_scroll(updated_scroll)}
 
-      {:error, changeset} ->
-        {:noreply, assign(socket, form: to_form(changeset))}
+      {:error, _} ->
+        {:noreply, socket}
     end
   end
 
   defp new_empty_scroll do
     %Grim.Scroll{}
+  end
+
+  defp scroll_form(scroll), do: to_form(Ecto.Changeset.change(scroll))
+
+  defp assign_scroll(socket, scroll) do
+    socket
+    |> assign(:scroll, scroll)
+    |> assign(:form, scroll_form(scroll))
   end
 end

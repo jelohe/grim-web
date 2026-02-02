@@ -95,14 +95,14 @@ defmodule GrimWeb.UserLive.Settings do
                 </label>
               </div>
               <div>
-              <input
-                class="cursor-pointer"
-                id="lang-es"
-                name="lang"
-                type="radio"
-                value="es"
-                checked={@locale == "es"}
-              />
+                <input
+                  class="cursor-pointer"
+                  id="lang-es"
+                  name="lang"
+                  type="radio"
+                  value="es"
+                  checked={@locale == "es"}
+                />
                 <label
                   class={[
                     "label text-sm cursor-pointer",
