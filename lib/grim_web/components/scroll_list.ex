@@ -21,7 +21,7 @@ defmodule GrimWeb.ScrollList do
           class={
             base_class <> (if scroll.id == @selected.id, do: selected_class, else: "")}
         >
-          <.interaction class="h-full w-full text-left px-6">
+          <.interaction class="h-full text-left px-6 truncate max-w-full scroll-select-btn">
             <p class="truncate text-sm text-ellipsis mt-1 font-lg font-bold transition-all break-words brightness-80">
               {scroll.name}
             </p>

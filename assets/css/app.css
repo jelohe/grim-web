@@ -142,6 +142,10 @@
          truncate text-ellipsis break-words;
 }
 
+.scroll-select-btn > .interaction-content {
+    @apply truncate max-w-full;
+}
+
 .interaction:hover .icon {
   @apply rotate-12
          animate-tilt;
