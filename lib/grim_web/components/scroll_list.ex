@@ -18,7 +18,6 @@ defmodule GrimWeb.ScrollList do
         <li
           phx-click="open_scroll"
           phx-value-id={scroll.id}
-          bg-neutral
           class={
             base_class <> (if scroll.id == @selected.id, do: selected_class, else: "")}
         >

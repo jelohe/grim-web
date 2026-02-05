@@ -95,6 +95,11 @@ function openSidebar() {
 
 }
 
+window.clearSearch = function() {
+  const searchInput = document.getElementById("search-input")
+  searchInput.value = "";
+}
+
 // connect if there are any LiveViews on the page
 liveSocket.connect()
 

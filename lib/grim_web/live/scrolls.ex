@@ -1,8 +1,10 @@
 defmodule GrimWeb.Scrolls do
   use GrimWeb, :live_view
 
+  alias Grim.Scroll
   import GrimWeb.ScrollList
   import GrimWeb.Interaction
+  import Ecto.Query
 
   @impl true
   def render(assigns) do
@@ -12,17 +14,29 @@ defmodule GrimWeb.Scrolls do
       <div class="flex flex-1 h-[calc(100vh)]">
         <aside
           id="sidebar"
-          class={"#{if @sidebar_open, do: "sidebar-open", else: "sidebar-close"} h-screen flex flex-col bg-bg2 border-r-1 border-bg3 transition-all duration-300 overflow-hidden"}
+          class={"#{if @sidebar_open, do: "sidebar-open", else: "sidebar-close"} h-screen flex flex-col bg-bg2 transition-all duration-300 overflow-hidden"}
         >
           <!-- Header -->
           <.interaction
             id="create-button"
-            class="font-bold border-b-1 border-bg3 h-20 p-6 w-full text-left text-lg truncate shrink-0"
+            class="font-bold border-bg3 h-18 p-6 w-full text-left text-lg truncate shrink-0"
             phx-click="new_scroll"
             text={gettext("Create note")}
             icon="hero-document-plus"
           />
-          <div class="flex-1 overflow-y-auto min-h-0">
+          <input
+            id="search-input"
+            class="h-8 px-4 text-sm rounded-full bg-bg1 text-fg2 mt-0 mb-2 mx-2"
+            phx-keyup="search_scroll"
+            placeholder={gettext("search")}
+          />
+          <.interaction
+            icon="hero-x-circle"
+            class="block -mt-9 self-end mr-4"
+            onclick="clearSearch()"
+            phx-click="all_scrolls"
+          />
+          <div class="flex-1 overflow-y-auto min-h-0 mt-2">
             <.scroll_list selected={@scroll} scrolls={@scrolls} />
           </div>
           <!-- Footer -->
@@ -42,7 +56,7 @@ defmodule GrimWeb.Scrolls do
         </aside>
         <.interaction
           id="sidebar-btn"
-          class="px-3 h-full bg-bg2 border-l-1 border-bg3 cursor-w-resize"
+          class="px-3 h-full bg-bg2 cursor-w-resize"
           onclick="toggleSidebar()"
           phx-click="toggle_sidebar"
           icon="hero-bars-3-bottom-left"
@@ -106,6 +120,26 @@ defmodule GrimWeb.Scrolls do
   @impl true
   def handle_event("new_scroll", _params, socket) do
     {:noreply, assign_scroll(socket, new_empty_scroll())}
+  end
+
+  def handle_event("all_scrolls", _params, socket) do
+    user = socket.assigns.current_scope.user
+    scrolls = Grim.Repo.preload(user, :scrolls).scrolls
+    {:noreply, assign(socket, scrolls: scrolls)}
+  end
+
+  @impl true
+  def handle_event("search_scroll", %{"value" => value}, socket) do
+    user = socket.assigns.current_scope.user
+    q = from s in Scroll,
+      where: ilike(s.name, ^"%#{value}%")
+      and s.user_id == ^user.id
+
+    results = Grim.Repo.all(q)
+
+    {:noreply,
+      socket
+    |> assign(:scrolls, results)}
   end
 
   @impl true
