@@ -26,14 +26,12 @@ import {hooks as colocatedHooks} from "phoenix-colocated/grim"
 import topbar from "../vendor/topbar"
 
 let Hooks = {}
-Hooks.NewScroll = {
+Hooks.Refocus = {
   mounted() {
-    this.el.addEventListener("click", () => {
-      const createForm = document.getElementById("create-form");
-      const updateForm = document.getElementById("update-form");
-      createForm.classList.remove("hidden");
-      updateForm.classList.add("hidden");
-    });
+    this.el.focus()
+  },
+  updated() {
+    this.el.focus()
   }
 }
 

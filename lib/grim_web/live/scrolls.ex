@@ -2,6 +2,7 @@ defmodule GrimWeb.Scrolls do
   use GrimWeb, :live_view
 
   alias Grim.Scroll
+
   import GrimWeb.ScrollList
   import GrimWeb.Interaction
   import Ecto.Query
@@ -77,6 +78,8 @@ defmodule GrimWeb.Scrolls do
           >
             <div class="flex w-full justify-between px-8 py-6 pr-2 border-b-1 border-bg2">
               <.input
+                id="scroll-name"
+                phx-hook="Refocus"
                 phx-debounce="500"
                 class="flex-1 h-9 focus:outline-none text-3xl font-bold box-border pr-4 min-w-0 w-full truncate text-ellipsis border-box text-fg2"
                 field={@form[:name]}
