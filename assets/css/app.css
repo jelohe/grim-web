@@ -122,17 +122,6 @@
     --color-magic: #6E7AFF;
 }
 
-@keyframes tilt {
-    0%, 100% {transform: rotate(0deg);}
-    25% {transform: rotate(8deg);}
-    50% {transform: rotate(-8deg);}
-    75% {transform: rotate(4deg);}
-}
-
-@utility animate-tilt {
-    animation: tilt 0.3s ease-in-out;
-}
-
 @utility interaction {
   @apply cursor-pointer select-none ease-in-out hover:text-fg1;
 }
@@ -144,11 +133,6 @@
 
 .scroll-select-btn > .interaction-content {
     @apply truncate max-w-full;
-}
-
-.interaction:hover .icon {
-  @apply rotate-12
-         animate-tilt;
 }
 
 .interaction:active .interaction-content {

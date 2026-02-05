@@ -74,7 +74,6 @@ defmodule GrimWeb.Scrolls do
             for={@form}
             id="scroll-editor"
             phx-change="autosave_scroll"
-            phx-submit="autosave_scroll"
           >
             <div class="flex w-full justify-between px-8 py-6 pr-2 border-b-1 border-bg2">
               <.input
@@ -88,6 +87,7 @@ defmodule GrimWeb.Scrolls do
               <.interaction
                 icon="hero-trash"
                 class="pt-1 pr-4 hover:text-warning"
+                phx-value-id={@scroll.id}
                 phx-click="remove_scroll"
               />
             </div>
@@ -125,6 +125,7 @@ defmodule GrimWeb.Scrolls do
     {:noreply, assign_scroll(socket, new_empty_scroll())}
   end
 
+  @impl true
   def handle_event("all_scrolls", _params, socket) do
     user = socket.assigns.current_scope.user
     scrolls = Grim.Repo.preload(user, :scrolls).scrolls
@@ -156,16 +157,20 @@ defmodule GrimWeb.Scrolls do
     {:noreply, assign_scroll(socket, scroll)}
   end
 
-  def handle_event("remove_scroll", _, socket) do
-    scroll = socket.assigns.scroll
+  @impl true
+  def handle_event("remove_scroll", %{"id" => selected_id}, socket) do
+    {id, _} = Integer.parse(selected_id)
+    scroll =
+      socket.assigns.scrolls
+      |> Enum.find_value(fn v -> if v.id == id, do: v end)
 
     {:ok, _} = Grim.Repo.delete(scroll)
 
     scrolls =
       socket.assigns.scrolls
-      |> Enum.reject(fn sc -> sc.id == scroll.id end)
+      |> Enum.reject(fn sc -> sc.id == id end)
 
-    next_scroll = List.first(scrolls) || new_empty_scroll()
+    next_scroll = new_empty_scroll()
 
     {:noreply,
      socket
@@ -193,6 +198,7 @@ defmodule GrimWeb.Scrolls do
      |> push_navigate(to: ~p"/users/log-out", method: :delete)}
   end
 
+  @impl true
   def handle_event("toggle_sidebar", _params, socket) do
     {:noreply,
      assign(socket, :sidebar_open, !socket.assigns.sidebar_open)}
